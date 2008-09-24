@@ -29,7 +29,7 @@ class OFXImport(object):
 
     def __import_data(self, ofx):
         # -- saving bank account
-        self.bank_account = BankAccount.by_account(ofx['acctid'])
+        self.bank_account = model.store.get(BankAccount, ofx['acctid'])
         if not bool(self.bank_account):
             logging.debug('Saving bank account: %s' % ofx['acctid'])
             d = { 'bankid': int(ofx['bankid']), 'branch': ofx['branchid'], 'account': ofx['acctid'] }
