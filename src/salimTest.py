@@ -670,7 +670,7 @@ class TestCSVAdapter(TestDB):
 ,Lissandra,02-02-1977'''
         csv_file = csv.splitlines()
         class Person(object): pass
-        objs = parse_csv_file(csv_file, globals=locals())
+        objs = parse_csv_file(csv_file, locals())
         self.assertEqual(2, len(objs))
 
 
