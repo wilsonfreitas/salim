@@ -87,7 +87,7 @@ def check_user_environment():
     if not os.path.isfile(salim_db):
         create_database(salim_db_uri)
         # TODO: Organize this.
-        read_file(model.store, '../database/salim.sql')
+        read_file(model.store, 'salim.sql')
     else:
         create_database(salim_db_uri)
 
