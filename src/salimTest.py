@@ -98,7 +98,7 @@ NEWFILEUID:NONE
 class TestOFXFileParser(TestCase):
 
     def setUp(self):
-        self.parser = OFXFileParser("BB_200805.ofx")
+        self.parser = OFXFileParser("Test4.ofx")
     
     def test_print_unicode(self):
         '''testing printing unicode statements'''
@@ -119,8 +119,8 @@ class TestDB(TestCase):
     def setUp(self):
         """docstring for setUp"""
         self.store = create_database('sqlite:')
-        read_file(self.store, '../database/salim.sql')
-        self.parser = OFXFileParser("BB_200805.ofx")
+        read_file(self.store, 'salim.sql')
+        self.parser = OFXFileParser("Test4.ofx")
         self.parser1 = OFXFileParser("Test1.ofx")
         self.parser2 = OFXFileParser("Test2.ofx")
     
@@ -662,6 +662,16 @@ class TestCSVAdapter(TestDB):
                                                  [u'Telemar', date(2008,05,21), -139.00, u'Casa'], False)
         self.store.add(entry)
         self.assertEqual(entry.category.parent.name, u'Despesas Operacionais')
+
+    def test_csv_parsing(self):
+        """testing csv parsing"""
+        csv = '''Person,name,birth date
+,Wilson,12-07-1976
+,Lissandra,02-02-1977'''
+        csv_file = csv.splitlines()
+        class Person(object): pass
+        objs = parse_csv_file(csv_file, globals=locals())
+        self.assertEqual(2, len(objs))
 
 
 if __name__ == '__main__':
