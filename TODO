@@ -1,0 +1,45 @@
+
+* study more about __slots__ and its consequences
+
+* csvadapter
+	* write tests
+		* (done) parse value test (with and without parser_table)
+		* (done) resolve naming tests (with underscore and camel case)
+		* (done) class instance creation test (parameter less and parameter full)
+		* parse csv test
+
+* ofx2db
+	* import csv files and attach them into objects
+	* import budget entries into salim database
+	* GUI: try pyobjc to build the interface to setup Categories to StatementTransactions
+		* setup bank_account name
+		* setup transaction category
+		* create CategoryRules
+	* where do I put files like database.sql (setup files -- /usr/share/salim -- make salim install)?
+	* (done) replace ledger_balance with balance
+	* (done) correct ofx2db and salim.facade to incorporate (*args, **kwargs) changes
+	* (done) implement (*args, **kwargs) in salim.model (Category, CategoryRule, LedgerBalance, StatementTransaction) __init__ method. Now paramaters should receive data with correct types, __init__ does not parse parameters. Tests need a review.
+	* (done) generate a file with memos: --export-memos
+	* (done) import a file with pattern to category entries and import these entries as rules: --import-rules
+	* (done) move InportOFX to a facade module salim.facade
+	* (done) implement log messages
+	* (done) setup user environment
+	* (done) implement ledger balance validation
+	* (done) implement rules
+	* (done) use logging module to display messages
+
+* salim.ofx
+	* implement the *COMPLETE* dict interface in OFXParser
+	* use a tree data structure in OFXParser, it can be better for data retrieval with case insensitive keys and others approaches
+
+* salim.model
+	* implement hierarchy in StatementTransaction to split accounts
+	* study metaclasses to implement more elegantly (*args, **kwargs)
+	* (done) organize tests StatementTransaction2
+	* (done) test LedgerBalance.transactions and LedgerBalance.transactions.add (or write a method add_transaction -- like Category.add_rule -- so the balance check will be done in the LedgerBalance -- like LedgerBalance.validate(last_amount))
+	* (done) check for real iterables in db.execute
+	* (done) write the rules API
+	* (done) organize unit test in salimTest.py: resolve inheritance problem.
+	* (done) write unit test cases to salim.ofx module (OFXTextParser, OFXFileParser)
+	* (done) create salim.db with wrapper functions to database access via storm
+	* (done) write unit test cases to salim.db module
