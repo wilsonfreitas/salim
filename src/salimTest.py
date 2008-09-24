@@ -665,9 +665,14 @@ class TestCSVAdapter(TestDB):
 
     def test_csv_parsing(self):
         """testing csv parsing"""
-        csv = '''Person,name,birth date
+        csv = '''
+        
+Person,name,birth date
 ,Wilson,12-07-1976
-,Lissandra,02-02-1977'''
+,Lissandra,02-02-1977
+
+# comments
+'''
         csv_file = csv.splitlines()
         class Person(object): pass
         objs = parse_csv_file(csv_file, locals())
