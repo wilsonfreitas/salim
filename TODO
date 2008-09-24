@@ -6,11 +6,11 @@
 		* (done) parse value test (with and without parser_table)
 		* (done) resolve naming tests (with underscore and camel case)
 		* (done) class instance creation test (parameter less and parameter full)
-		* parse csv test
+		* (done) parse csv test
 
 * ofx2db
 	* import csv files and attach them into objects
-	* import budget entries into salim database
+	* import budget entries into salim database via command line
 	* GUI: try pyobjc to build the interface to setup Categories to StatementTransactions
 		* setup bank_account name
 		* setup transaction category
