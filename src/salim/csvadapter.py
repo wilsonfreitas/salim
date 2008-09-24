@@ -99,7 +99,8 @@ def parse_csv_file(csv_file, globals, camel_case=False, parameter_less=True, par
     '''
     objects = []
     for row in csv.reader(csv_file):
-        if row[0].startswith('#') or len(row) == 0: # ignore comments and empty lines
+        row = [field.strip() for field in row]
+        if len(row) == 0 or row[0].startswith('#') or (len(row) == 1 and row[0] == ''): # ignore comments and empty lines
             continue
         if bool(row[0]):
             typo, properties = globals[row[0]], resolve_property_names(row[1:], camel_case=camel_case)
