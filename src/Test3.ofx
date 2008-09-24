@@ -1,0 +1,312 @@
+OFXHEADER:100DATA:OFXSGMLVERSION:102SECURITY:NONEENCODING:USASCIICHARSET:1252COMPRESSION:NONEOLDFILEUID:NONENEWFILEUID:NONE<OFX>
+   <SIGNONMSGSRSV1>
+      <SONRS>
+         <STATUS>
+            <CODE>0</CODE>
+            <SEVERITY>INFO</SEVERITY>
+         </STATUS>
+         <DTSERVER>20080108120000[-3:BRT]</DTSERVER>
+         <LANGUAGE>POR</LANGUAGE>
+         <FI>
+            <ORG>Banco do Brasil</ORG>
+            <FID>1</FID>
+         </FI>
+      </SONRS>
+   </SIGNONMSGSRSV1>
+   <BANKMSGSRSV1>
+      <STMTTRNRS>
+         <TRNUID>1</TRNUID>
+         <STATUS>
+            <CODE>0</CODE>
+            <SEVERITY>INFO</SEVERITY>
+         </STATUS>
+         <STMTRS>
+            <CURDEF>BRL</CURDEF>
+            <BANKACCTFROM>
+               <BANKID>1</BANKID>
+               <BRANCHID>3520-3</BRANCHID>
+               <ACCTID>14329-4</ACCTID>
+               <ACCTTYPE>CHECKING</ACCTTYPE>
+            </BANKACCTFROM>
+            <BANKTRANLIST>
+               <DTSTART>20071130120000[-3:BRT]</DTSTART>
+               <DTEND>20071231120000[-3:BRT]</DTEND>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071203120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-25.00</TRNAMT>
+                  <FITID>20071203125000</FITID>
+                  <CHECKNUM>000000139498</CHECKNUM>
+                  <REFNUM>139.498</REFNUM>
+                  <MEMO>Compra com Cartão - 01/12 10:58 CIA HAIR DESING</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071203120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-57.77</TRNAMT>
+                  <FITID>20071203157770</FITID>
+                  <CHECKNUM>000000263643</CHECKNUM>
+                  <REFNUM>263.643</REFNUM>
+                  <MEMO>Compra com Cartão - 03/12 17:40 DROG PACHECO 113</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071203120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-1820.00</TRNAMT>
+                  <FITID>2007120311820000</FITID>
+                  <CHECKNUM>000000010773</CHECKNUM>
+                  <REFNUM>10.773</REFNUM>
+                  <MEMO>Débito de Ações</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071204120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-1.84</TRNAMT>
+                  <FITID>2007120411840</FITID>
+                  <CHECKNUM>000000000000</CHECKNUM>
+                  <REFNUM>0</REFNUM>
+                  <MEMO>CPMF</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071205120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-50.00</TRNAMT>
+                  <FITID>20071205150000</FITID>
+                  <CHECKNUM>000000160165</CHECKNUM>
+                  <REFNUM>160.165</REFNUM>
+                  <MEMO>Compra com Cartão - 05/12 16:42 AUTO POSTO PISTAO</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071205120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-31.00</TRNAMT>
+                  <FITID>20071205131000</FITID>
+                  <CHECKNUM>000000272225</CHECKNUM>
+                  <REFNUM>272.225</REFNUM>
+                  <MEMO>Compra com Cartão - 05/12 20:03 MC DONALDS  BSH</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071206120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-7.80</TRNAMT>
+                  <FITID>2007120617800</FITID>
+                  <CHECKNUM>000000146443</CHECKNUM>
+                  <REFNUM>146.443</REFNUM>
+                  <MEMO>Compra com Cartão - 06/12 12:54 FUNDAO GRILL</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071206120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-100.00</TRNAMT>
+                  <FITID>200712061100000</FITID>
+                  <CHECKNUM>307083003989</CHECKNUM>
+                  <REFNUM>61.307.083.003.989</REFNUM>
+                  <MEMO>Saque no TAA - 06/12 13:07 HOSP.UNIVERSITARIO</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071206120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-476.30</TRNAMT>
+                  <FITID>200712061476300</FITID>
+                  <CHECKNUM>000000120601</CHECKNUM>
+                  <REFNUM>120.601</REFNUM>
+                  <MEMO>Pagamento de Título</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071207120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-100.00</TRNAMT>
+                  <FITID>200712071100000</FITID>
+                  <CHECKNUM>243383003989</CHECKNUM>
+                  <REFNUM>71.243.383.003.989</REFNUM>
+                  <MEMO>Saque no TAA - 07/12 12:43 SAA-QUITANDA</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071210120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-85.36</TRNAMT>
+                  <FITID>20071210185360</FITID>
+                  <CHECKNUM>000000146189</CHECKNUM>
+                  <REFNUM>146.189</REFNUM>
+                  <MEMO>Compra com Cartão - 08/12 12:49 PAPIZZO</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071210120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-440.00</TRNAMT>
+                  <FITID>200712101440000</FITID>
+                  <CHECKNUM>319403003989</CHECKNUM>
+                  <REFNUM>101.319.403.003.989</REFNUM>
+                  <MEMO>Saque no TAA - 10/12 13:19 HOSP.UNIVERSITARIO</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071211120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-27.90</TRNAMT>
+                  <FITID>20071211127900</FITID>
+                  <CHECKNUM>000000146752</CHECKNUM>
+                  <REFNUM>146.752</REFNUM>
+                  <MEMO>Compra com Cartão - 11/12 12:59 FNAC PAULISTA</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071212120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-57.80</TRNAMT>
+                  <FITID>20071212157800</FITID>
+                  <CHECKNUM>000000176739</CHECKNUM>
+                  <REFNUM>176.739</REFNUM>
+                  <MEMO>Compra com Cartão - 12/12 21:18 LAPIS DE COR</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071212120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-15.00</TRNAMT>
+                  <FITID>20071212115000</FITID>
+                  <CHECKNUM>000000071212</CHECKNUM>
+                  <REFNUM>71.212</REFNUM>
+                  <MEMO>Tarifa Pacote de Serviços</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071212120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-5.19</TRNAMT>
+                  <FITID>2007121215190</FITID>
+                  <CHECKNUM>000000000000</CHECKNUM>
+                  <REFNUM>0</REFNUM>
+                  <MEMO>CPMF</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071214120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>1354.50</TRNAMT>
+                  <FITID>2007121401354500</FITID>
+                  <CHECKNUM>000000635045</CHECKNUM>
+                  <REFNUM>635.045</REFNUM>
+                  <MEMO>Recebimento de Proventos</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071214120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-61.08</TRNAMT>
+                  <FITID>20071214161080</FITID>
+                  <CHECKNUM>000000048275</CHECKNUM>
+                  <REFNUM>48.275</REFNUM>
+                  <MEMO>Déb autorizado em Conta</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071217120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-64.89</TRNAMT>
+                  <FITID>20071217164890</FITID>
+                  <CHECKNUM>000000158779</CHECKNUM>
+                  <REFNUM>158.779</REFNUM>
+                  <MEMO>Compra com Cartão - 17/12 16:19 RI HAPPI</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071217120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-363.60</TRNAMT>
+                  <FITID>200712171363600</FITID>
+                  <CHECKNUM>000000161237</CHECKNUM>
+                  <REFNUM>161.237</REFNUM>
+                  <MEMO>Compra com Cartão - 16/12 17:00 LEROY MERLIN</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071217120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-47.50</TRNAMT>
+                  <FITID>20071217147500</FITID>
+                  <CHECKNUM>000000261781</CHECKNUM>
+                  <REFNUM>261.781</REFNUM>
+                  <MEMO>Compra com Cartão - 16/12 17:09 LEROY MERLIN</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071219120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-79.60</TRNAMT>
+                  <FITID>20071219179600</FITID>
+                  <CHECKNUM>000000151346</CHECKNUM>
+                  <REFNUM>151.346</REFNUM>
+                  <MEMO>Compra com Cartão - 19/12 14:15 LOJAS RENNER FL 4</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071219120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-28.00</TRNAMT>
+                  <FITID>20071219128000</FITID>
+                  <CHECKNUM>000000253548</CHECKNUM>
+                  <REFNUM>253.548</REFNUM>
+                  <MEMO>Compra com Cartão - 19/12 14:52 FNAC BARRA SHOPPI</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071219120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-83.00</TRNAMT>
+                  <FITID>20071219183000</FITID>
+                  <CHECKNUM>000000354296</CHECKNUM>
+                  <REFNUM>354.296</REFNUM>
+                  <MEMO>Compra com Cartão - 19/12 15:04 MAHOGANY</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071219120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-25.90</TRNAMT>
+                  <FITID>20071219125900</FITID>
+                  <CHECKNUM>000000656093</CHECKNUM>
+                  <REFNUM>656.093</REFNUM>
+                  <MEMO>Compra com Cartão - 19/12 15:34 LOJAS RENNER FL 4</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071224120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-39.00</TRNAMT>
+                  <FITID>20071224139000</FITID>
+                  <CHECKNUM>000000145777</CHECKNUM>
+                  <REFNUM>145.777</REFNUM>
+                  <MEMO>Compra com Cartão - 24/12 12:42 CONNECTION 28 COM</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071224120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-3.22</TRNAMT>
+                  <FITID>2007122413220</FITID>
+                  <CHECKNUM>000000000000</CHECKNUM>
+                  <REFNUM>0</REFNUM>
+                  <MEMO>CPMF</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071226120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-2.00</TRNAMT>
+                  <FITID>2007122612000</FITID>
+                  <CHECKNUM>600600012794</CHECKNUM>
+                  <REFNUM>103.600.600.012.794</REFNUM>
+                  <MEMO>Tarifa Saque Banco24Horas - Data balanc.: 24/12/2007</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071226120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-70.00</TRNAMT>
+                  <FITID>20071226170000</FITID>
+                  <CHECKNUM>600600012794</CHECKNUM>
+                  <REFNUM>103.600.600.012.794</REFNUM>
+                  <MEMO>Banco 24 Horas - Data balanc.: 24/12/2007</MEMO>
+               </STMTTRN>
+               <STMTTRN>
+                  <TRNTYPE>OTHER</TRNTYPE>
+                  <DTPOSTED>20071228120000[-3:BRT]</DTPOSTED>
+                  <TRNAMT>-50.00</TRNAMT>
+                  <FITID>20071228150000</FITID>
+                  <CHECKNUM>000000133715</CHECKNUM>
+                  <REFNUM>133.715</REFNUM>
+                  <MEMO>Compra com Cartão - 28/12 09:21 POSTO GENESIS</MEMO>
+               </STMTTRN>
+            </BANKTRANLIST>
+            <LEDGERBAL>
+               <BALAMT>8039.90</BALAMT>
+               <DTASOF>20071231120000[-3:BRT]</DTASOF>
+            </LEDGERBAL>
+         </STMTRS>
+      </STMTTRNRS>
+   </BANKMSGSRSV1>
+</OFX>
