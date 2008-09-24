@@ -2,15 +2,16 @@
 * study more about __slots__ and its consequences
 
 * csvadapter
+	* implement update/check of classes that are already store into database: inspect function
 	* write tests
+		* test the object inspection
 		* (done) parse value test (with and without parser_table)
 		* (done) resolve naming tests (with underscore and camel case)
 		* (done) class instance creation test (parameter less and parameter full)
 		* (done) parse csv test
 
 * ofx2db
-	* import csv files and attach them into objects
-	* import budget entries into salim database via command line
+	* import csv files and attach them into objects: create import_csv ot import everything (rules, budget ...)
 	* GUI: try pyobjc to build the interface to setup Categories to StatementTransactions
 		* setup bank_account name
 		* setup transaction category
