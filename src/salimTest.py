@@ -677,6 +677,26 @@ Person,name,birth date
         class Person(object): pass
         objs = parse_csv_file(csv_file, locals())
         self.assertEqual(2, len(objs))
+        self.assertEqual(objs[0].name, u'Wilson')
+
+    def test_csv_parsing_with_salim_model_classes(self):
+        """testing csv parsing with salim.model classes: repeated rows"""
+        csv = '''
+
+Category,name,parent
+,Filhos,Despesas Operacionais
+
+# comments
+'''
+        csv_file = csv.splitlines()
+        objs = parse_model_csv_file(csv_file, globals())
+        try:
+            self.store.add(objs[0])
+            self.store.commit()
+            cat = objs[0]
+        except:
+            cat = update_model_instance(self.store, objs[0])
+        self.assertEqual(cat.parent.name, u'Despesas Operacionais')
 
 
 if __name__ == '__main__':
