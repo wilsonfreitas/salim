@@ -18,6 +18,7 @@ from salim.ofx import OFXFileParser
 from salim import facade
 from salim.model import *
 from salim import model
+from salim.csvadapter import *
 
 APP_NAME = 'ofx2db'
 SALIM_HOME = os.path.join(os.environ['HOME'], '.salim')
@@ -38,7 +39,7 @@ class GetOptions(object):
         '--import-ofx': 2
     }
     def __init__(self):
-        self.long_options = ['help', 'verbosity-level=', 'export-memos', 'import-rules', 'import-ofx']
+        self.long_options = ['help', 'verbosity-level=', 'export-memos', 'import-csv']
         self.options = 'hv:'
         self.verbosity_level = logging.INFO
         self.actions = []
@@ -51,7 +52,7 @@ class GetOptions(object):
                 self.usage_extended()
             if opt in ['--verbosity-level', '-v']:
                 self.verbosity_level = LOG_LEVEL[val]
-            if opt in ['--export-memos', '--import-rules', '--import-ofx']:
+            if opt in ['--export-memos', '--import-csv']:
                 self.action = opt[2:]
         if bool(args):
             self.filenames = args
@@ -158,11 +159,12 @@ def export_memos(options):
     memos = list(set(memos))
     memos.sort()
     logging.debug('Total uniq memos: %d' % len(memos))
-    file_memos = file('memos.csv', 'w')
+    output_filename = 'memos.txt'
+    file_memos = file(output_filename, 'w')
     for memo in memos:
         file_memos.write('%s\n' % memo.encode('utf-8'))
     file_memos.close()
-    logging.info('Total %d memos saved in %s' % (len(memos), 'memos.csv'))
+    logging.info('Total %d memos saved in %s' % (len(memos), output_filename))
 
 
 def import_csv(options):
@@ -183,7 +185,7 @@ def import_csv(options):
         file_csv.close()
     logging.info('Total objects inserted: %d' % i)
     logging.info('Total objects updated: %d' % u)
-    # model.store.commit()
+    model.store.commit()
 
 
 action_functions = {
