@@ -16,12 +16,17 @@ def str2date(dts):
     return date( int(dts[0:4]), int(dts[4:6]), int(dts[6:8]) )
 
 
+def to_unicode(s):
+    s = s.decode('utf-8')
+    return unicode(s)
+
+
 parse_table = {
     r'^-?\s*\d+$': int,
     r'^-?\s*\d+[\.,]\d+$': float,
     r'^\d\d[/\.-_:]\d\d[/\.-_:]\d\d\d\d$': lambda v: str2date( '%s%s%s' % (v[6:], v[3:5], v[:2]) ),
     r'^[Tt][Rr][Uu][eE]|[Ff][Aa][Ll][Ss][Ee]$': lambda v: v.lower() == 'true',
-    'any': unicode
+    'any': to_unicode
 }
 
 
