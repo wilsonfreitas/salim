@@ -107,6 +107,34 @@ def file_processor(options):
 @file_processor(options)
 def import_ofx_files(filename):
     facade.import_ofx(filename)
+
+def import_rules(options):
+    logging.info('Given %d files: %s' % (len(options.filenames), ', '.join(options.filenames)) )
+    import csv
+    for filename in options.filenames:
+        logging.debug('Processing: %s' % filename)
+        file_memos = file(filename)
+        new_rules = old_rules = 0
+        for row in csv.reader(file_memos):
+            rule = unicode(row[0])
+            cat_rule = CategoryRule.by_regex(rule)
+            if cat_rule is None:
+                cat_name = row[1].decode('utf-8')
+                cat = Category.by_name(cat_name)
+                if cat is None:
+                    cat = Category(cat_name)
+                    model.store.add(cat)
+                    logging.debug('Creating category: %s' % cat.name)
+                cat.add_rule(rule)
+                logging.debug('Creating category rule %s to category %s' % (rule, cat.name))
+                new_rules += 1
+            else:
+                logging.debug('Rule already exists: %s' % rule)
+                old_rules += 1
+        logging.info('Rules created: %d' % new_rules)
+        logging.info('Rules repeated: %d' % old_rules)
+        file_memos.close()
+    model.store.commit()
 '''
 
 
@@ -137,39 +165,31 @@ def export_memos(options):
     logging.info('Total %d memos saved in %s' % (len(memos), 'memos.csv'))
 
 
-def import_rules(options):
+def import_csv(options):
     logging.info('Given %d files: %s' % (len(options.filenames), ', '.join(options.filenames)) )
-    import csv
+    u = i = 0
     for filename in options.filenames:
-        logging.debug('Processing: %s' % filename)
-        file_memos = file(filename)
-        new_rules = old_rules = 0
-        for row in csv.reader(file_memos):
-            rule = unicode(row[0])
-            cat_rule = CategoryRule.by_regex(rule)
-            if cat_rule is None:
-                cat_name = row[1].decode('utf-8')
-                cat = Category.by_name(cat_name)
-                if cat is None:
-                    cat = Category(cat_name)
-                    model.store.add(cat)
-                    logging.debug('Creating category: %s' % cat.name)
-                cat.add_rule(rule)
-                logging.debug('Creating category rule %s to category %s' % (rule, cat.name))
-                new_rules += 1
-            else:
-                logging.debug('Rule already exists: %s' % rule)
-                old_rules += 1
-        logging.info('Rules created: %d' % new_rules)
-        logging.info('Rules repeated: %d' % old_rules)
-        file_memos.close()
-    model.store.commit()
+        logging.info('Processing: %s' % filename)
+        file_csv = file(filename)
+        objs = parse_model_csv_file(file_csv, globals())
+        for obj in objs:
+            try:
+                model.store.add(obj)
+                model.store.commit()
+                i += 1
+            except:
+                update_model_instance(model.store, obj)
+                u += 1
+        file_csv.close()
+    logging.info('Total objects inserted: %d' % i)
+    logging.info('Total objects updated: %d' % u)
+    # model.store.commit()
 
 
 action_functions = {
     'import-ofx': import_ofx_files,
     'export-memos': export_memos,
-    'import-rules': import_rules
+    'import-csv': import_csv
 }
 
 if __name__ == '__main__':
