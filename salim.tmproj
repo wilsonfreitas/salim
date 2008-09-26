@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>TODO</string>
+	<string>src/salimTest.py</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -26,44 +26,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>107</integer>
 				<key>line</key>
-				<integer>2</integer>
+				<integer>13</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>database/salim.sql</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>30</integer>
-				<key>line</key>
-				<integer>9</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>3</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>53</integer>
-				<key>line</key>
-				<integer>9</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>30</integer>
-				<key>line</key>
-				<integer>9</integer>
-			</dict>
+			<integer>1</integer>
 		</dict>
 		<key>src/ofx2db</key>
 		<dict>
@@ -72,98 +42,68 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>191</integer>
+				<integer>167</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>166</integer>
 		</dict>
 		<key>src/salim/csvadapter.py</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>25</integer>
+				<integer>52</integer>
 				<key>line</key>
-				<integer>74</integer>
+				<integer>81</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>72</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>4</integer>
-				<key>line</key>
-				<integer>74</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>41</integer>
-				<key>line</key>
-				<integer>74</integer>
-			</dict>
+			<integer>67</integer>
 		</dict>
 		<key>src/salim/facade.py</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>57</integer>
 				<key>line</key>
-				<integer>50</integer>
+				<integer>31</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>29</integer>
+			<integer>14</integer>
 		</dict>
 		<key>src/salim/model.py</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>31</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>88</integer>
+				<integer>3</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>88</integer>
-		</dict>
-		<key>src/salim/ofx.py</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>25</integer>
-				<key>line</key>
-				<integer>21</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
 			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>8</integer>
 		</dict>
 		<key>src/salimTest.py</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>38</integer>
+				<integer>18</integer>
 				<key>line</key>
-				<integer>656</integer>
+				<integer>699</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>540</integer>
+			<integer>678</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
@@ -171,11 +111,9 @@
 		<string>TODO</string>
 		<string>src/salimTest.py</string>
 		<string>src/salim/csvadapter.py</string>
-		<string>src/salim/ofx.py</string>
-		<string>src/salim/model.py</string>
-		<string>database/salim.sql</string>
-		<string>src/salim/facade.py</string>
 		<string>src/ofx2db</string>
+		<string>src/salim/facade.py</string>
+		<string>src/salim/model.py</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
