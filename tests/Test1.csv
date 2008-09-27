@@ -1,0 +1,12 @@
+Category,name,parent
+,Casa,
+,Empregada,Casa
+,Educação,
+,Comunicação,Casa
+,Despesas São Paulo,
+,Aluguel,Despesas São Paulo
+
+BankAccount,account,name
+,14329-4,Banco do Brasil
+,714329-4,Banco Real (Lissandra)
+
