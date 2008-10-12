@@ -28,26 +28,26 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>6</integer>
+				<integer>14</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>1</integer>
+			<integer>0</integer>
 		</dict>
-		<key>src/ofx2db</key>
+		<key>scripts/ofx2db</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>37</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>55</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>75</integer>
+			<integer>188</integer>
 		</dict>
 		<key>src/salim/csvadapter.py</key>
 		<dict>
@@ -61,21 +61,7 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>14</integer>
-		</dict>
-		<key>src/salim/facade.py</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>57</integer>
-				<key>line</key>
-				<integer>31</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>14</integer>
+			<integer>40</integer>
 		</dict>
 		<key>src/salim/model.py</key>
 		<dict>
@@ -84,21 +70,21 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>3</integer>
+				<integer>41</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>5</integer>
+			<integer>125</integer>
 		</dict>
-		<key>src/salimTest.py</key>
+		<key>tests/salimTest.py</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>19</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>4</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -109,10 +95,9 @@
 	<key>openDocuments</key>
 	<array>
 		<string>TODO</string>
-		<string>src/salimTest.py</string>
+		<string>tests/salimTest.py</string>
 		<string>src/salim/csvadapter.py</string>
-		<string>src/ofx2db</string>
-		<string>src/salim/facade.py</string>
+		<string>scripts/ofx2db</string>
 		<string>src/salim/model.py</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>

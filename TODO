@@ -3,6 +3,7 @@
 
 * csvadapter
 	* implement a csv writer
+	* parse_table could be implemented as an object to permit salim parser extension via object inheritance 
 	* (done) implement update/check of classes that are already store into database: its better to aks forgiven than permission
 	* write tests
 		* (done) test the object update
@@ -12,12 +13,15 @@
 		* (done) parse csv test
 
 * ofx2db
-	* import csv files and attach them into objects: create import_csv ot import everything (rules, budget ...)
+	* create reports
 	* GUI: try pyobjc to build the interface to setup Categories to StatementTransactions
 		* setup bank_account name
 		* setup transaction category
 		* create CategoryRules
 	* where do I put files like database.sql (setup files -- /usr/share/salim -- make salim install)?
+	* (done) copy salim.sql contents to salim.model as a model variable or a function to create salim database
+	* (done) export memos from statement transactions without category
+	* (done) import csv files and attach them into objects: create import_csv ot import everything (rules, budget ...)
 	* (done) replace ledger_balance with balance
 	* (done) correct ofx2db and salim.facade to incorporate (*args, **kwargs) changes
 	* (done) implement (*args, **kwargs) in salim.model (Category, CategoryRule, LedgerBalance, StatementTransaction) __init__ method. Now paramaters should receive data with correct types, __init__ does not parse parameters. Tests need a review.
