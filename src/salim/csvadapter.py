@@ -20,11 +20,25 @@ def to_unicode(s):
     s = s.decode('utf-8')
     return unicode(s)
 
+def parse_date(date_str):
+    import re
+    from datetime import date
+    # dsr -- date separator regex
+    dsr = re.compile(r'[/.-]')
+    # dp -- date parts
+    dp = dsr.split(date_str)
+    return date( int(dp[2]), int(dp[1]), int(dp[0]) )
+
+def parse_str(s):
+    s = s[1:]
+    s.decode('utf-8')
+    return unicode(s)
 
 parse_table = {
     r'^-?\s*\d+$': int,
     r'^-?\s*\d+[\.,]\d+$': float,
-    r'^\d\d[/\.-_:]\d\d[/\.-_:]\d\d\d\d$': lambda v: str2date( '%s%s%s' % (v[6:], v[3:5], v[:2]) ),
+    r'^\d?\d[/.-]\d\d[/.-]\d\d\d\d$': parse_date,
+    r'^\'': parse_str,
     r'^[Tt][Rr][Uu][eE]|[Ff][Aa][Ll][Ss][Ee]$': lambda v: v.lower() == 'true',
     'any': to_unicode
 }
