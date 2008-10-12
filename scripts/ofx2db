@@ -9,12 +9,11 @@
 # * I need to define a base path to save database and possible configuration files.
 #   $HOME/salim is a good place.
 
-import os
 import sys
+sys.path.append('../src')
+import os
 import logging
 import getopt
-
-sys.path.append('../src')
 
 from salim.ofx import OFXFileParser
 from salim import facade
@@ -35,13 +34,8 @@ LOG_LEVEL = {
 }
 
 class GetOptions(object):
-    action_labels = {
-        '--export-memos': 0,
-        '--import-rules': 1,
-        '--import-ofx': 2
-    }
     def __init__(self):
-        self.long_options = ['help', 'verbosity-level=', 'export-memos', 'import-csv']
+        self.long_options = ['help', 'verbosity-level=', 'export-memos', 'import-csv', 'import-ofx']
         self.options = 'hv:'
         self.verbosity_level = logging.INFO
         self.actions = []
@@ -54,7 +48,7 @@ class GetOptions(object):
                 self.usage_extended()
             if opt in ['--verbosity-level', '-v']:
                 self.verbosity_level = LOG_LEVEL[val]
-            if opt in ['--export-memos', '--import-csv']:
+            if opt in ['--export-memos', '--import-csv', '--import-ofx']:
                 self.action = opt[2:]
         if bool(args):
             self.filenames = args
@@ -88,9 +82,7 @@ def check_user_environment():
     salim_db = os.path.join(SALIM_HOME, 'salim.db')
     salim_db_uri = 'sqlite:%s' % salim_db
     if not os.path.isfile(salim_db):
-        create_database(salim_db_uri)
-        # TODO: Organize this.
-        read_file(model.store, 'salim.sql')
+        create_salim_database(salim_db_uri)
     else:
         create_database(salim_db_uri)
 
@@ -148,8 +140,7 @@ def import_ofx_files(options):
         logging.debug('Processing: %s' % filename)
         facade.import_ofx(filename)
 
-
-def export_memos(options):
+'''def export_memos(options):
     logging.info('Given %d files: %s' % (len(options.filenames), ', '.join(options.filenames)) )
     memos = []
     for filename in options.filenames:
@@ -157,6 +148,22 @@ def export_memos(options):
         ofx = OFXFileParser(filename)
         _memos = [stmt['memo'] for stmt in ofx['StmtTrn']]
         memos += _memos
+    logging.debug('Total memos: %d' % len(memos))
+    memos = list(set(memos))
+    memos.sort()
+    logging.debug('Total uniq memos: %d' % len(memos))
+    output_filename = 'memos.txt'
+    file_memos = file(output_filename, 'w')
+    for memo in memos:
+        file_memos.write('%s\n' % memo.encode('utf-8'))
+    file_memos.close()
+    logging.info('Total %d memos saved in %s' % (len(memos), output_filename))
+
+
+'''
+def export_memos(options):
+    # logging.info('Given %d files: %s' % (len(options.filenames), ', '.join(options.filenames)) )
+    memos = [stmt.memo for stmt in model.store.find(StatementTransaction, StatementTransaction.category == None)]
     logging.debug('Total memos: %d' % len(memos))
     memos = list(set(memos))
     memos.sort()

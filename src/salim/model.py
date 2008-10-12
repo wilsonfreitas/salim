@@ -8,7 +8,25 @@ from storm.locals import create_database as storm_create_database
 # where a.id_bank_account = b.id_bank_account order by a.id_bank_account, a.date, a.amount;
 
 __all__ = [ 'Category', 'BankAccount', 'LedgerBalance', 'StatementTransaction', 'CategoryRule', 
-'create_database', 'execute', 'read_file', 'str2date', 'destroy_database', 'BudgetEntry']
+'create_database', 'execute', 'read_file', 'str2date', 'destroy_database', 'BudgetEntry', 'create_salim_database']
+
+salim_database_statements = '''
+CREATE TABLE category (name TEXT PRIMARY KEY, parent_name TEXT);
+
+CREATE TABLE category_rule (id_category_rule INTEGER PRIMARY KEY, category_name TEXT not null, regex TEXT);
+CREATE UNIQUE INDEX index_unique_regex ON category_rule ( regex );
+
+CREATE TABLE budget_entry (id_budget_entry INTEGER PRIMARY KEY, category_name TEXT, name TEXT, date TEXT, amount REAL);
+CREATE TABLE bank_account (account text primary key, bankid integer, name text, branch text, type text );
+
+CREATE TABLE ledger_balance (id_ledger_balance integer primary key, bank_account_name text not null, date text, 
+                             amount real );
+CREATE UNIQUE INDEX index_unique_balance ON ledger_balance ( bank_account_name, date );
+
+CREATE TABLE statement_transaction (id_statement_transaction integer primary key, id_balance integer, category_name text,
+                                    memo text, date text, amount real, type text, checknum text, fitid text );
+CREATE UNIQUE INDEX index_unique_stmt_trans ON statement_transaction ( fitid );
+'''
 
 store = None
 
@@ -19,6 +37,14 @@ def create_database(database_uri):
         store = Store(storm_create_database(database_uri))
     return store
 
+def create_salim_database(database_uri):
+    """Create salim database"""
+    global salim_database_statements, store
+    create_database(database_uri)
+    for stmt in salim_database_statements.split(';'):
+        store.execute(stmt)
+    store.commit()
+
 def destroy_database():
     """docstring for destroy_database"""
     global store
@@ -27,7 +53,7 @@ def destroy_database():
     store = None
 
 def execute(store, statements):
-    """Executes sql statements in one time"""
+    """Executes sql many statements"""
     if type(statements) is str:
         sql_statements = statements.split(';')
     else:
@@ -37,13 +63,11 @@ def execute(store, statements):
         store.execute(stmt)
     store.commit()
 
-
 def read_file(store, filename):
     '''Loads a database from sql statements of one file'''
     sql_file = file(filename)
     execute(store, sql_file.read())
     sql_file.close()
-
 
 def str2date(dts):
     '''Converts string 'YYYYMMDD' to date'''

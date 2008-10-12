@@ -1,14 +1,15 @@
 #!/usr/bin/python
 # -*- encoding: latin1 -*-
 
+import sys
+sys.path.append('./src')
+
 from unittest import TestCase, TestSuite, makeSuite, TextTestRunner
 from salim.ofx import OFXFileParser, OFXTextParser
 from salim.model import *
 from salim.csvadapter import *
 from datetime import date
 
-import sys
-sys.path('../src')
 
 class TestOFXParser(TestCase):
     ofx_text = '''
@@ -101,7 +102,7 @@ NEWFILEUID:NONE
 class TestOFXFileParser(TestCase):
 
     def setUp(self):
-        self.parser = OFXFileParser("Test4.ofx")
+        self.parser = OFXFileParser("tests/Test4.ofx")
     
     def test_print_unicode(self):
         '''testing printing unicode statements'''
@@ -122,10 +123,10 @@ class TestDB(TestCase):
     def setUp(self):
         """docstring for setUp"""
         self.store = create_database('sqlite:')
-        read_file(self.store, 'salim.sql')
-        self.parser = OFXFileParser("Test4.ofx")
-        self.parser1 = OFXFileParser("Test1.ofx")
-        self.parser2 = OFXFileParser("Test2.ofx")
+        read_file(self.store, './src/salim.sql')
+        self.parser = OFXFileParser( "./tests/Test4.ofx")
+        self.parser1 = OFXFileParser("./tests/Test1.ofx")
+        self.parser2 = OFXFileParser("./tests/Test2.ofx")
     
     def tearDown(self):
         """docstring for tearDown"""
