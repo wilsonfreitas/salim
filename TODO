@@ -12,8 +12,16 @@
 		* (done) class instance creation test (parameter less and parameter full)
 		* (done) parse csv test
 
-* ofx2db
+* salim
 	* create reports
+	* export budget to iCal (on current month)
+	* GUI: web using javascript (jquery) and BaseHttpServer, it's quite simple to handle requests with doPost and doGet. The idea is to use one single xhtml page and handle requests via AJAX calls.
+		* show the list of transactions
+		* show the list of budgets
+		* show the general status (balance for each account, expected income and expected expenses for the current month)
+		* setup bank_account name
+		* setup transaction category (via drag and drop, dragging category to transaction)
+		* remove Category/CategoryRules/BudgetEntry
 	* GUI: try pyobjc to build the interface to setup Categories to StatementTransactions
 		* setup bank_account name
 		* setup transaction category

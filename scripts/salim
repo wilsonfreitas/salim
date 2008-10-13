@@ -35,7 +35,8 @@ LOG_LEVEL = {
 
 class GetOptions(object):
     def __init__(self):
-        self.long_options = ['help', 'verbosity-level=', 'export-memos', 'import-csv', 'import-ofx']
+        self.long_options = ['help', 'verbosity-level=', 'export-memos', 'import-csv',
+        'import-ofx', 'server']
         self.options = 'hv:'
         self.verbosity_level = logging.INFO
         self.actions = []
@@ -64,7 +65,7 @@ Try `%(prog)s --help' for more information.
         sys.stderr.write('''\
 Usage: %(prog)s [OPTION] [FILES]...
 Import OFX files into Salim database.
-Example: %(prog)s -v DEBUG extrato_20080801.ofx extrato_20080701.ofx
+Example: %(prog)s -v DEBUG --import-ofx 20080801.ofx 20080701.ofx
 
 Options:
   -v, --verbosity-level     select the verbosity level of output messages: ERROR, WARN, INFO (default), DEBUG
