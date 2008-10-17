@@ -145,6 +145,10 @@ class BudgetEntry(GenericBase):
     def __init__(self, *args, **kwargs):
         self._parse_args_and_kwargs(*args, **kwargs)
 
+    @classmethod
+    def find_after_date(cls, date):
+        return store.find( cls, cls.date >= date ).order_by( cls.date )
+    
 
 class BankAccount(GenericBase):
     __storm_table__ = "bank_account"
@@ -174,11 +178,6 @@ class LedgerBalance(GenericBase):
         # self.amount       = float(info['balamt'])
         # self.bank_account = bank_account
     
-    @classmethod
-    def by_bank_account_and_date(cls, bank_account, date):
-        """docstring for by_bank_account_and_date"""
-        return store.find(cls, cls.bank_account_name == bank_account.account, cls.date == date).one()
-
     def add_transaction(self, transaction):
         """docstring for add_transaction"""
         if not StatementTransaction.has_fitid(transaction.fitid):
@@ -194,7 +193,6 @@ class LedgerBalance(GenericBase):
             return None
         
     def is_valid(self):
-        """docstring for validate"""
         cls = type(self)
         balances = store.find(cls, cls.bank_account == self.bank_account).order_by(Desc(cls.date))
         if balances.count() > 1:
@@ -209,10 +207,25 @@ class LedgerBalance(GenericBase):
                 return False
         else:
             return True
+
+    @classmethod
+    def previous(cls, date, account):
+        return iter( store.find( cls, cls.date <= date, 
+            cls.bank_account == account).order_by( Desc(cls.date) ) ).next()
     
     @classmethod
+    def find_after(cls, balance):
+        return ( bal for bal in store.find(cls, cls.date > balance.date, 
+            cls.bank_account == balance.bank_account).order_by( cls.date ) )
+
+    @classmethod
+    def by_bank_account_and_date(cls, bank_account, date):
+        """docstring for by_bank_account_and_date"""
+        return store.find(cls, cls.bank_account_name == bank_account.account, cls.date == date).one()
+
+    @classmethod
     def last(cls):
-        return iter(store.find(cls).order_by(Desc(cls.date))).next()
+        return iter( store.find(cls).order_by( Desc(cls.date) ) ).next()
 
 
 class StatementTransaction(GenericBase):
@@ -232,6 +245,10 @@ class StatementTransaction(GenericBase):
 
     def __init__(self, *args, **kwargs):
         self._parse_args_and_kwargs(*args, **kwargs)
+
+    @classmethod
+    def by_balance(cls, balance):
+        return ( store.find(cls, cls.balance == balance).order_by(cls.date) )
 
     @classmethod
     def has_fitid(cls, fitid):

@@ -67,7 +67,28 @@ class OFXImport(object):
         else:
             self.balance = None
 
-
 def import_ofx(filename):
     return OFXImport(filename)
 
+def find_transactions_after_date(date, account):
+    previous_balance = LedgerBalance.previous(date, account)
+    balance_amount   = previous_balance.amount
+
+    for balance in LedgerBalance.find_after(previous_balance):
+        for stmt in StatementTransaction.by_balance(balance):
+            if stmt.date >= date:
+                yield (stmt, balance_amount)
+            balance_amount += stmt.amount
+
+def find_balance_amount_for_date(date, account):
+    previous_balance = LedgerBalance.previous(date, account)
+    balance_amount   = previous_balance.amount
+
+    for balance in LedgerBalance.find_after(previous_balance):
+        for stmt in StatementTransaction.by_balance(balance):
+            if stmt.date >= date:
+                return balance_amount
+            balance_amount += stmt.amount
+
+def find_budget_entries_after_date(date):
+    return BudgetEntry.find_after_date(date)

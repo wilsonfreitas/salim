@@ -1,27 +1,22 @@
 #!/usr/bin/env python
 # 
-#  ofx2db.py
 #  salim
 #  
-#  Created by Wilson Freitas on 2008-06-29.
-#  Copyright 2008 __MyCompanyName__. All rights reserved.
-# 
-# * I need to define a base path to save database and possible configuration files.
-#   $HOME/salim is a good place.
 
 import sys
 sys.path.append('../src')
 import os
 import logging
 import getopt
+import datetime
+import time
 
 from salim.ofx import OFXFileParser
+from salim.model import create_database, create_salim_database
 from salim import facade
-from salim.model import *
 from salim import model
-from salim.csvadapter import *
 
-APP_NAME = 'ofx2db'
+APP_NAME = 'salim'
 SALIM_HOME = os.path.join(os.environ['HOME'], '.salim')
 
 LOG_LEVEL = {
@@ -36,11 +31,13 @@ LOG_LEVEL = {
 class GetOptions(object):
     def __init__(self):
         self.long_options = ['help', 'verbosity-level=', 'export-memos', 'import-csv',
-        'import-ofx', 'server']
+        'import-ofx', 'server', 'date=', 'list-balance', 'account=', 'report']
         self.options = 'hv:'
         self.verbosity_level = logging.INFO
         self.actions = []
         self.action = None
+        year, month, a, b, c, d, e, f, g = time.localtime()
+        self.date = (year, month)
 
     def parse_options(self, argv):
         opts, args = getopt.getopt(argv, self.options, self.long_options)
@@ -49,10 +46,19 @@ class GetOptions(object):
                 self.usage_extended()
             if opt in ['--verbosity-level', '-v']:
                 self.verbosity_level = LOG_LEVEL[val]
-            if opt in ['--export-memos', '--import-csv', '--import-ofx']:
+            if opt in ['--export-memos', '--import-csv', '--import-ofx', '--list-balance', '--report']:
                 self.action = opt[2:]
+            if opt == '--date':
+                year  = int(val[:4])
+                month = int(val[4:])
+                self.date = (year, month)
+            if opt == '--account':
+                self.account = unicode(val)
         if bool(args):
             self.filenames = args
+        if self.action == 'list-balance' and not hasattr(self, 'account'):
+            raise Exception()
+            
 
     def usage(self):
         sys.stderr.write('''\
@@ -74,6 +80,10 @@ Options:
       --import-csv          read a csv file and import its content into database as objects via ORM
       --import-ofx          import an ofx file into database
       --server              starts the salim http server
+      --report              print a report for a given account (--account) and from a date (--date)
+      --list-balance        lists the balances for a given account (--account) and from a date (--date)
+      --date=DATE           sets DATE to list balance
+      --account=ACC         sets ACC as account when lists balance
       --help                display this help and exit
 ''' % { 'prog': APP_NAME } )
         sys.exit(0)
@@ -109,7 +119,6 @@ def export_memos(options):
     file_memos.close()
     logging.info('Total %d memos saved in %s' % (len(memos), output_filename))
 
-
 def import_csv(options):
     logging.info('Given %d files: %s' % (len(options.filenames), ', '.join(options.filenames)) )
     u = i = 0
@@ -130,11 +139,44 @@ def import_csv(options):
     logging.info('Total objects updated: %d' % u)
     model.store.commit()
 
+def list_balance(options):
+    year, month = options.date
+    date = datetime.date(year, month, 1)
+
+    transactions = [ t for t in facade.find_transactions_after_date(date, options.account) ]
+    name = lambda cat: (cat and cat.name) or '-'
+    for stmt, balance_amount in transactions:
+        print '%10s %30.30s %30.30s %10.2f %10.2f' % (stmt.date, stmt.memo.encode('utf-8'),
+            name(stmt.category), stmt.amount, balance_amount + stmt.amount)
+
+def report(options):
+    year, month = options.date
+    date = datetime.date(year, month, 1)
+
+    transactions = [ t for t in facade.find_transactions_after_date(date, options.account) ]
+    last = transactions[len(transactions)-1][0]
+    balance = transactions[len(transactions)-1][1] + last.amount
+    print '%-30.30s%-10s'    % ('Date:', last.date)
+    print '%-30.30s%-30.30s' % ('Bank account:', last.balance.bank_account.name)
+    print '-' * 60
+    print '%-30.30s%10.2f'   % ('Balance:', balance)
+    expense = 0.0
+    for entry in facade.find_budget_entries_after_date(last.date): expense += entry.amount
+    print '%-30.30s%10.2f' % ('Expected expenses:', expense)
+    print '-' * 40
+    print '%-30.30s%10.2f' % ('Net:', balance - expense)
+    print '-' * 80
+    name = lambda cat: (cat and cat.name.encode('utf-8')) or '-'
+    for entry in facade.find_budget_entries_after_date(last.date):
+        print '%10s%30.30s%30.30s%10.2f' % ( entry.date, entry.name.encode('utf-8'), 
+            name(entry.category), entry.amount )
 
 action_functions = {
-    'import-ofx': import_ofx_files,
-    'export-memos': export_memos,
-    'import-csv': import_csv
+    'import-ofx'   : import_ofx_files,
+    'export-memos' : export_memos,
+    'import-csv'   : import_csv,
+    'list-balance' : list_balance,
+    'report'       : report
 }
 
 if __name__ == '__main__':

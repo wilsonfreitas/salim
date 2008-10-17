@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>TODO</string>
+	<string>scripts/reports.py</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -20,6 +20,8 @@
 			<key>children</key>
 			<array>
 				<dict>
+					<key>expanded</key>
+					<true/>
 					<key>name</key>
 					<string>wel</string>
 					<key>regexFolderFilter</key>
@@ -28,6 +30,8 @@
 					<string>../workspace/wel</string>
 				</dict>
 			</array>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>contrib</string>
 		</dict>
@@ -41,28 +45,28 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>42</integer>
+				<integer>52</integer>
 				<key>line</key>
-				<integer>16</integer>
+				<integer>35</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>10</integer>
 		</dict>
-		<key>scripts/legacycode.py</key>
+		<key>scripts/reports.py</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>12</integer>
 				<key>line</key>
-				<integer>11</integer>
+				<integer>52</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>19</integer>
 		</dict>
 		<key>scripts/salim</key>
 		<dict>
@@ -71,12 +75,28 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>92</integer>
+				<integer>25</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>90</integer>
+			<integer>9</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>24</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>25</integer>
+			</dict>
 		</dict>
 		<key>src/salim/csvadapter.py</key>
 		<dict>
@@ -111,14 +131,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>29</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>224</integer>
+				<integer>199</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>163</integer>
+			<integer>154</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>198</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>199</integer>
+			</dict>
 		</dict>
 		<key>tests/salimTest.py</key>
 		<dict>
@@ -141,9 +177,9 @@
 		<string>tests/salimTest.py</string>
 		<string>src/salim/csvadapter.py</string>
 		<string>scripts/salim</string>
-		<string>src/salim/facade.py</string>
-		<string>scripts/legacycode.py</string>
+		<string>scripts/reports.py</string>
 		<string>src/salim/model.py</string>
+		<string>src/salim/facade.py</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
