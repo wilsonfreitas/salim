@@ -4,7 +4,17 @@
 * csvadapter
 	* implement a csv writer/exporter
 	* parse_table could be implemented as an object to permit salim parser extension via object inheritance 
-	* (done) implement update/check of classes that are already store into database: its better to aks forgiven than permission
+	* fields evaluation: use python eval function
+		* =?'TEXT -> text evaluation
+		* (=|+)TEXT   -> number evaluation (float or int ?)
+		* @TEXT   -> function call (maybe...)
+# CSV TEMPLATE
+TYPE,id, [f1], f2
+   +, 7,add, +21+21
+   -, 5,del, AC
+   ~, 6,upd, '21
+
+	* (done) implement update/check of classes that are already store into database: its better to ask forgiven than permission
 	* write tests
 		* (done) test the object update
 		* (done) parse value test (with and without parser_table)
@@ -13,6 +23,7 @@
 		* (done) parse csv test
 
 * salim
+	* merge model and facade modules
 	* BudgetEntry must have a field (column) for payed/not payed
 	* BudgetEntry: negative amounts are expenses and the positive ones are income
 	* create reports
