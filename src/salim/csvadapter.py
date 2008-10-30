@@ -10,20 +10,59 @@ Copyright (c) 2008 __MyCompanyName__. All rights reserved.
 import csv
 import re
 
+class ORM(object):
+    """docstring for ORM"""
+    def __init__(self, arg):
+        super(ORM, self).__init__()
+        self.arg = arg
+        
+    def execute(self, csv):
+        """docstring for execute"""
+        pass
+        
+    def executeCSVStatement(self, csvStatement):
+        """docstring for executeCSVStatement"""
+        pass
+        
 
-def load(store, csv):
-    """docstring for load"""
-    import csv
-    for csvRow in csv.reader(csv):
-        csvRow = [f.strip() for f in csvRow]
-        if len(csvRow) is 0 or csvRow[0][0] in ['#', '']:
-            continue
-        elif csvRow[0][0].isalpha():
-            handler = TypeHandler(csvRow)
-        elif csvRow[0] in '-+~':
-            # TODO: parse csvRow (use eval)
-            actions[ csvRow[0] ](handler, csvRow[1:], store)
+class StormORM(ORM):
+    """docstring for StormORM"""
+    def __init__(self, arg):
+        super(StormORM, self).__init__()
+        self.arg = arg
+        
+    def execute(self, csvText):
+        """docstring for execute"""
+        import csv
+        for csvRow in csv.reader(csvText.split('\n')):
+            csvRow = [f.strip() for f in csvRow]
+            if len(csvRow) is 0 or csvRow[0][0] in ['#', '']:
+                continue
+            elif csvRow[0][0].isalpha():
+                csvType = CSVType(csvRow)
+            elif csvRow[0] in '-+~':
+                # TODO: parse csvRow (use eval)
+                # actions[ csvRow[0] ](handler, csvRow[1:], store)
+                statement = CSVStatement(csvRow, csvType)
+                self.executeCSVStatement(statement)
+                
+    def executeCSVStatement(self, csvStatement):
+        """docstring for executeCSVStatement"""
+        pass
 
+
+class SQLObjectORM(ORM):
+    """docstring for SQLObjectORM"""
+    def __init__(self, arg):
+        super(SQLObjectORM, self).__init__()
+        self.arg = arg
+
+class SQLAlchemyORM(ORM):
+    """docstring for SQLAlchemyORM"""
+    def __init__(self, arg):
+        super(SQLAlchemyORM, self).__init__()
+        self.arg = arg
+        
 
 def addAction(handler, csvRow, store):
     attrs = []
