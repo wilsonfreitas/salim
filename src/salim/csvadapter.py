@@ -10,6 +10,83 @@ Copyright (c) 2008 __MyCompanyName__. All rights reserved.
 import csv
 import re
 
+
+def load(store, csv):
+    """docstring for load"""
+    import csv
+    for csvRow in csv.reader(csv):
+        csvRow = [f.strip() for f in csvRow]
+        if len(csvRow) is 0 or csvRow[0][0] in ['#', '']:
+            continue
+        elif csvRow[0][0].isalpha():
+            handler = TypeHandler(csvRow)
+        elif csvRow[0] in '-+~':
+            # TODO: parse csvRow (use eval)
+            actions[ csvRow[0] ](handler, csvRow[1:], store)
+
+
+def addAction(handler, csvRow, store):
+    attrs = []
+    attrs += handler.keys
+    attrs += handler.attributes
+    attrs = [(attrName, csvRow[i]) for i, attrName in attrs]
+
+class Key(object):
+    """docstring for KeyWrapper"""
+    def __init__(self, keyName, isPrimaryKey):
+        self.keyName = keyName
+        self.isPrimaryKey = isPrimaryKey
+        
+
+class TypeHandler(object):
+    """docstring for TypeHandler"""
+    def __init__(self, typeRow):
+        # TODO: replace split by real csv split
+        fields = typeRow.split(',')
+        self.typeName = fields[0]
+        self.type = importClass(self.typeName)
+        self.keys = []
+        self.attributes = []
+        primaryKey = None
+        for i, field in zip(count(1), fields[1:]):
+            # TODO: resolve field names
+            if re.match(r'^\{\w+\}$', field):
+                self.keys.append( (i, field) )
+            else:
+                self.attributes.append( (i, field) )
+            if isPrimaryKey(self.type, field):
+                primaryKey = (i, field)
+        if len(self.keys) is 0:
+            if primaryKey is None:
+                raise Exception("No key given")
+            else:
+                self.keys.append( primaryKey )
+                if primaryKey in self.attributes:
+                    self.attributes.remove( primaryKey )
+
+
+def importClass(className):
+    fields = className.split('.')
+    modName = '.'.join(fields[:-1])
+    clsName = fields[-1]
+    module = __import__(modName, globals(), locals(), [clsName], -1)
+    return getattr(module, clsName)
+
+def isPrimaryKey(cls, attrName):
+    """docstring for isPrimaryKey"""
+    if hasattr(getattr(cls, attrName), 'primary'):
+        return True
+    else:
+        return False
+
+def Eq(cls, name, value):
+    f = attrgetter(name)
+    return eq(f(cls), value)
+
+def And(preds):
+    return reduce(and_, preds)
+        
+
 def str2date(dts):
     '''Converts string 'YYYYMMDD' to date'''
     from datetime import date
@@ -53,10 +130,12 @@ def parse_value(v, parse_table=parse_table):
 
 def resolve_property_name(attr_name):
     '''
-    Convert header human readable names to property names. Examples:
+    Convert human readable header names to property names. Examples:
     
-    * Category turns to category
-    * Bank Account turns to bank_account
+    >>> resolve_property_name("Category")
+    "category"
+    >>> resolve_property_name("Bank Account")
+    "bank_account"
     '''
     attr_name = str(attr_name).strip()
     attr_name = attr_name.lower()
@@ -66,10 +145,12 @@ def resolve_property_name(attr_name):
 
 def resolve_camel_case_property_name(attr_name):
     '''
-    Convert header human readable names to property names. Examples:
+    Convert human readable header names to camel case property names. Examples:
     
-    * Category turns to category
-    * Bank Account turns to bankAccount
+    >>> resolve_property_name("Category")
+    "category"
+    >>> resolve_property_name("Bank Account")
+    "bankAccount"
     '''
     attr_name = str(attr_name).strip()
     s = ''

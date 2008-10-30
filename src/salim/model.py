@@ -89,10 +89,10 @@ class GenericBase(object):
 
 class Category(GenericBase):
     __storm_table__ = "category"
-    name = Unicode( primary=True )
-    parent_name = Unicode()
-    parent = Reference( parent_name, name )
-    __cons_parms__ = ['name', 'parent']
+    name            = Unicode( primary=True )
+    parent_name     = Unicode()
+    parent          = Reference( parent_name, name )
+    __cons_parms__  = ['name', 'parent']
     
     def __init__(self, *args, **kwargs):
         self._parse_args_and_kwargs(*args, **kwargs)
@@ -117,11 +117,11 @@ class Category(GenericBase):
 
 class CategoryRule(GenericBase):
     __storm_table__ = "category_rule"
-    id = Int(name="id_category_rule", primary=True)
-    category_name = Unicode()
-    category = Reference(category_name, Category.name)
-    regex = Unicode()
-    __cons_parms__ = ['regex', 'category']
+    id              = Int(name="id_category_rule", primary=True)
+    category_name   = Unicode()
+    category        = Reference(category_name, Category.name)
+    regex           = Unicode()
+    __cons_parms__  = ['regex', 'category']
     
     def __init__(self, *args, **kwargs):
         self._parse_args_and_kwargs(*args, **kwargs)
@@ -140,6 +140,7 @@ class BudgetEntry(GenericBase):
     name            = Unicode()
     date            = Date()
     amount          = Float()
+    # scenario        = Unicode()
     __cons_parms__  = ['name', 'date', 'amount', 'category']
     
     def __init__(self, *args, **kwargs):
