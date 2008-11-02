@@ -9,45 +9,168 @@ Copyright (c) 2008 __MyCompanyName__. All rights reserved.
 
 import csv
 import re
+import datetime
 
-class ORM(object):
-    """docstring for ORM"""
+class AttributeParser(object):
+    """docstring for AttributeParser"""
+    def __init__(self):
+        self.regexes = [(re.compile(v.__doc__), v) for k, v in self.__dict__ if v.__doc__]
+        
+    def parse(self, text):
+        result = None
+        for regex, func in self.regexes:
+            match = regex.match(text)
+            if match:
+                result = func(text, match)
+        if not result:
+            result = parseAny(text)
+        return result
+        
+    def parseNumber(self, text, match):
+        r'^-?\s*\d+([\.,]\d+)?$'
+        return eval(text)
+
+    def parseBoolean(self, text, match):
+        r'^[Tt][Rr][Uu][eE]|[Ff][Aa][Ll][Ss][Ee]$'
+        return eval(text.lower().capitalize())
+
+    def parseText(self, text, match):
+        r'^\''
+        return text[1:]
+        
+    def parseAny(self, text):
+        return text
+
+
+class StormAttributeParser(AttributeParser):
+    """docstring for StormAttributeParser"""
     def __init__(self, arg):
-        super(ORM, self).__init__()
+        super(StormAttributeParser, self).__init__()
+
+    def parseText(self, text, match):
+        r'^\''
+        s = text[1:]
+        s.decode('utf-8')
+        return unicode(s)
+        
+    def parseDate(self, text, match):
+        r'^\d?\d[/.-]\d\d[/.-]\d\d\d\d$'
+        # dsr -- date separator regex
+        dsr = re.compile(r'[/.-]')
+        # dp -- date parts
+        dp = dsr.split(text)
+        return date( int(dp[2]), int(dp[1]), int(dp[0]) )
+
+    def parseAny(self, text):
+        return unicode(text.decode('utf-8'))
+
+
+class CSVType(object):
+    """docstring for CSVType"""
+    def __init__(self, fields):
+        self.typeName = fields[0]
+        self.type = importClass(self.typeName)
+        self.keys = {}
+        self.attributes = {}
+        self.statements = []
+        primaryKey = None
+        for i, field in zip(count(1), fields[1:]):
+            # TODO: resolve field names
+            if re.match(r'^\{\w+\}$', field):
+                self.keys[i] = field
+            else:
+                self.attributes[i] = field
+            if isPrimaryKey(self.type, field):
+                primaryKey = (i, field)
+        if len(self.keys) is 0:
+            if primaryKey is None:
+                raise Exception("No key given")
+            else:
+                self.keys[primaryKey[0]] = primaryKey[1]
+                if primaryKey[0] in self.attributes:
+                    del self.attributes[primaryKey[0]]
+
+    def addStatement(self, statement):
+        self.statements.append(statement)
+
+
+class CSVStatement(object):
+    """CSVStatement represents the csv statement to be executed by a ORM."""
+
+    def __init__(self, csvRow, attrParser):
+        self.csvRow = csvRow
+        self.attributes = {}
+        for i, field in zip(count(1), csvRow[1:]):
+            self.attributes[i] = attrParser.parse(field)
+            
+
+class InsertCSVStatement(CSVStatement):
+    """docstring for InsertCSVStatement"""
+    def __init__(self, csvRow, attrParser=AttributeParser()):
+        super(InsertCSVStatement, self).__init__(csvRow, attrParser)
         self.arg = arg
         
-    def execute(self, csv):
-        """docstring for execute"""
-        pass
-        
-    def executeCSVStatement(self, csvStatement):
-        """docstring for executeCSVStatement"""
-        pass
-        
 
-class StormORM(ORM):
-    """docstring for StormORM"""
-    def __init__(self, arg):
-        super(StormORM, self).__init__()
+class DeleteCSVStatement(CSVStatement):
+    """docstring for InsertCSVStatement"""
+    def __init__(self, csvRow, attrParser=AttributeParser()):
+        super(DeleteCSVStatement, self).__init__(csvRow, attrParser)
         self.arg = arg
         
-    def execute(self, csvText):
-        """docstring for execute"""
-        import csv
-        for csvRow in csv.reader(csvText.split('\n')):
+
+class UpdateCSVStatement(CSVStatement):
+    """docstring for InsertCSVStatement"""
+    def __init__(self, csvRow, attrParser=AttributeParser()):
+        super(UpdateCSVStatement, self).__init__(csvRow, attrParser)
+        self.arg = arg
+        
+
+class CSVStatementFactory(object):
+    """docstring for CSVStatementFactory"""
+    def newStatement(self, csvRow, attrParser=AttributeParser()):
+        """docstring for newStatement"""
+        if csvRow[0] == '+':
+            return InsertCSVStatement(csvRow)
+        elif csvRow[0] == '-':
+            return DeleteCSVStatement(csvRow)
+        elif csvRow[0] == '~':
+            return UpdateCSVStatement(csvRow)
+
+
+class CSV(object):
+    """CSV class that handles the csv files
+
+    content is any iterable where the content of each row is data delimited text.
+    """
+
+    def __init__(self, content, attrParser=AttributeParser()):
+        self.types = []
+        for csvRow in csv.reader(content):
             csvRow = [f.strip() for f in csvRow]
             if len(csvRow) is 0 or csvRow[0][0] in ['#', '']:
                 continue
             elif csvRow[0][0].isalpha():
                 csvType = CSVType(csvRow)
+                self.types.append(csvType)
             elif csvRow[0] in '-+~':
-                # TODO: parse csvRow (use eval)
-                # actions[ csvRow[0] ](handler, csvRow[1:], store)
-                statement = CSVStatement(csvRow, csvType)
-                self.executeCSVStatement(statement)
+                statement = CSVStatementFactory.newStatement(csvRow, attrParser)
+                csvType.addStatement(statement)
                 
-    def executeCSVStatement(self, csvStatement):
-        """docstring for executeCSVStatement"""
+
+class StormORM(ORM):
+    """docstring for StormORM"""
+    def __init__(self, uri=None, store=None):
+        from storm.locals import create_database, Store
+        self.uri = uri
+        self.store = store
+        if self.uri:
+            database = create_database(self.uri)
+            self.store = Store(database)
+        if not self.store:
+            raise Exception('None storm store')
+        
+    def execute(self, csvType, csvStatement):
+        """docstring for execute"""
         pass
 
 
@@ -75,34 +198,6 @@ class Key(object):
     def __init__(self, keyName, isPrimaryKey):
         self.keyName = keyName
         self.isPrimaryKey = isPrimaryKey
-        
-
-class TypeHandler(object):
-    """docstring for TypeHandler"""
-    def __init__(self, typeRow):
-        # TODO: replace split by real csv split
-        fields = typeRow.split(',')
-        self.typeName = fields[0]
-        self.type = importClass(self.typeName)
-        self.keys = []
-        self.attributes = []
-        primaryKey = None
-        for i, field in zip(count(1), fields[1:]):
-            # TODO: resolve field names
-            if re.match(r'^\{\w+\}$', field):
-                self.keys.append( (i, field) )
-            else:
-                self.attributes.append( (i, field) )
-            if isPrimaryKey(self.type, field):
-                primaryKey = (i, field)
-        if len(self.keys) is 0:
-            if primaryKey is None:
-                raise Exception("No key given")
-            else:
-                self.keys.append( primaryKey )
-                if primaryKey in self.attributes:
-                    self.attributes.remove( primaryKey )
-
 
 def importClass(className):
     fields = className.split('.')
@@ -125,6 +220,9 @@ def Eq(cls, name, value):
 def And(preds):
     return reduce(and_, preds)
         
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 
 def str2date(dts):
     '''Converts string 'YYYYMMDD' to date'''
@@ -155,7 +253,7 @@ parse_table = {
     r'^-?\s*\d+[\.,]\d+$': float,
     r'^\d?\d[/.-]\d\d[/.-]\d\d\d\d$': parse_date,
     r'^\'': parse_str,
-    r'^[Tt][Rr][Uu][eE]|[Ff][Aa][Ll][Ss][Ee]$': lambda v: v.lower() == 'true',
+    r'^[Tt][Rr][Uu][eE]|[Ff][Aa][Ll][Ss][Ee]$': lambda v: eval(v.lower().capitalize()),
     'any': to_unicode
 }
 
