@@ -157,6 +157,13 @@ class CSV(object):
                 csvType.addStatement(statement)
                 
 
+class ORM(object):
+    """docstring for ORM"""
+    def __init__(self, arg):
+        super(ORM, self).__init__()
+        self.arg = arg
+        
+
 class StormORM(ORM):
     """docstring for StormORM"""
     def __init__(self, uri=None, store=None):

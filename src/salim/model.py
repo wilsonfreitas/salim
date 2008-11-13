@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- encoding:utf-8 -*-
 
-from storm.locals import Int, Unicode, Reference, Date, Float, ReferenceSet, Desc, Store
+from storm.locals import Int, Unicode, Reference, Date, Float, ReferenceSet, Desc, Store, Bool
 from storm.locals import create_database as storm_create_database
 
 # sqlite> select a.date, a.amount, a.memo, b.account from statement_transaction a, bank_account b
@@ -16,15 +16,16 @@ CREATE TABLE category (name TEXT PRIMARY KEY, parent_name TEXT);
 CREATE TABLE category_rule (id_category_rule INTEGER PRIMARY KEY, category_name TEXT not null, regex TEXT);
 CREATE UNIQUE INDEX index_unique_regex ON category_rule ( regex );
 
-CREATE TABLE budget_entry (id_budget_entry INTEGER PRIMARY KEY, category_name TEXT, name TEXT, date TEXT, amount REAL);
-CREATE TABLE bank_account (account text primary key, bankid integer, name text, branch text, type text );
+CREATE TABLE budget_entry (id_budget_entry INTEGER PRIMARY KEY, category_name TEXT, name TEXT, 
+                           date TEXT, amount REAL, scenario TEXT, payed INTEGER);
+CREATE TABLE bank_account (account TEXT PRIMARY KEY, bankid INTEGER, name TEXT, branch text, type TEXT );
 
-CREATE TABLE ledger_balance (id_ledger_balance integer primary key, bank_account_name text not null, date text, 
-                             amount real );
+CREATE TABLE ledger_balance (id_ledger_balance INTEGER PRIMARY KEY, bank_account_name TEXT NOT NULL, date TEXT, 
+                             amount REAL );
 CREATE UNIQUE INDEX index_unique_balance ON ledger_balance ( bank_account_name, date );
 
-CREATE TABLE statement_transaction (id_statement_transaction integer primary key, id_balance integer, category_name text,
-                                    memo text, date text, amount real, type text, checknum text, fitid text );
+CREATE TABLE statement_transaction (id_statement_transaction INTEGER PRIMARY KEY, id_balance INTEGER, category_name TEXT,
+                                    memo TEXT, date TEXT, amount REAL, type TEXT, checknum text, fitid TEXT );
 CREATE UNIQUE INDEX index_unique_stmt_trans ON statement_transaction ( fitid );
 '''
 
@@ -140,8 +141,9 @@ class BudgetEntry(GenericBase):
     name            = Unicode()
     date            = Date()
     amount          = Float()
-    # scenario        = Unicode()
-    __cons_parms__  = ['name', 'date', 'amount', 'category']
+    payed           = Bool()
+    scenario        = Unicode()
+    __cons_parms__  = ['name', 'date', 'amount', 'category', 'payed', 'scenario']
     
     def __init__(self, *args, **kwargs):
         self._parse_args_and_kwargs(*args, **kwargs)
@@ -211,8 +213,11 @@ class LedgerBalance(GenericBase):
 
     @classmethod
     def previous(cls, date, account):
-        return iter( store.find( cls, cls.date <= date, 
-            cls.bank_account == account).order_by( Desc(cls.date) ) ).next()
+        balances = store.find( cls, cls.date <= date, cls.bank_account == account).order_by( Desc(cls.date) )
+        if balances.count() == 0:
+            return None
+        else:
+            return iter( balances ).next()
     
     @classmethod
     def find_after(cls, balance):
@@ -249,7 +254,7 @@ class StatementTransaction(GenericBase):
 
     @classmethod
     def by_balance(cls, balance):
-        return ( store.find(cls, cls.balance == balance).order_by(cls.date) )
+        return [ s for s in store.find(cls, cls.balance == balance).order_by(cls.date) ]
 
     @classmethod
     def has_fitid(cls, fitid):

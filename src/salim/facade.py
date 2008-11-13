@@ -72,10 +72,19 @@ def import_ofx(filename):
 
 def find_transactions_after_date(date, account):
     previous_balance = LedgerBalance.previous(date, account)
-    balance_amount   = previous_balance.amount
-
-    for balance in LedgerBalance.find_after(previous_balance):
-        for stmt in StatementTransaction.by_balance(balance):
+    if previous_balance:
+        balance_amount = previous_balance.amount
+        for balance in LedgerBalance.find_after(previous_balance):
+            for stmt in StatementTransaction.by_balance(balance):
+                if stmt.date >= date:
+                    yield (stmt, balance_amount)
+                balance_amount += stmt.amount
+    else:
+        last_balance = LedgerBalance.last()
+        statements = StatementTransaction.by_balance(last_balance)
+        net = reduce(lambda x,y: x + y.amount, statements, 0)
+        balance_amount = last_balance.amount - net
+        for stmt in statements:
             if stmt.date >= date:
                 yield (stmt, balance_amount)
             balance_amount += stmt.amount

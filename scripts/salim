@@ -12,9 +12,10 @@ import datetime
 import time
 
 from salim.ofx import OFXFileParser
-from salim.model import create_database, create_salim_database
+from salim.model import *
 from salim import facade
 from salim import model
+from salim.csvadapter import parse_model_csv_file
 
 APP_NAME = 'salim'
 SALIM_HOME = os.path.join(os.environ['HOME'], '.salim')
@@ -160,16 +161,15 @@ def report(options):
     print '%-30.30s%-30.30s' % ('Bank account:', last.balance.bank_account.name)
     print '-' * 60
     print '%-30.30s%10.2f'   % ('Balance:', balance)
-    expense = 0.0
-    for entry in facade.find_budget_entries_after_date(last.date): expense += entry.amount
+    budget_entries_not_payed = [e for e in facade.find_budget_entries_after_date(date) if not e.payed]
+    expense = reduce(lambda x,y: x + y.amount, budget_entries_not_payed, 0.0)
     print '%-30.30s%10.2f' % ('Expected expenses:', expense)
     print '-' * 40
     print '%-30.30s%10.2f' % ('Net:', balance - expense)
     print '-' * 80
     name = lambda cat: (cat and cat.name.encode('utf-8')) or '-'
-    for entry in facade.find_budget_entries_after_date(last.date):
-        print '%10s%30.30s%30.30s%10.2f' % ( entry.date, entry.name.encode('utf-8'), 
-            name(entry.category), entry.amount )
+    for entry in budget_entries_not_payed:
+        print '%10s%30.30s%30.30s%10.2f' % ( entry.date, entry.name.encode('utf-8'), name(entry.category), entry.amount )
 
 action_functions = {
     'import-ofx'   : import_ofx_files,
