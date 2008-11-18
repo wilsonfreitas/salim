@@ -10,12 +10,13 @@ Copyright (c) 2008 __MyCompanyName__. All rights reserved.
 import csv
 import re
 import datetime
+from operator import attrgetter, and_, eq
 
 class AttributeParser(object):
     """docstring for AttributeParser"""
     def __init__(self):
         self.regexes = [(re.compile(v.__doc__), v) for k, v in self.__dict__ if v.__doc__]
-        
+    
     def parse(self, text):
         result = None
         for regex, func in self.regexes:
@@ -25,34 +26,34 @@ class AttributeParser(object):
         if not result:
             result = parseAny(text)
         return result
-        
+    
     def parseNumber(self, text, match):
         r'^-?\s*\d+([\.,]\d+)?$'
         return eval(text)
-
+    
     def parseBoolean(self, text, match):
         r'^[Tt][Rr][Uu][eE]|[Ff][Aa][Ll][Ss][Ee]$'
         return eval(text.lower().capitalize())
-
+    
     def parseText(self, text, match):
         r'^\''
         return text[1:]
-        
+    
     def parseAny(self, text):
         return text
-
+    
 
 class StormAttributeParser(AttributeParser):
     """docstring for StormAttributeParser"""
     def __init__(self, arg):
         super(StormAttributeParser, self).__init__()
-
+    
     def parseText(self, text, match):
         r'^\''
         s = text[1:]
         s.decode('utf-8')
         return unicode(s)
-        
+    
     def parseDate(self, text, match):
         r'^\d?\d[/.-]\d\d[/.-]\d\d\d\d$'
         # dsr -- date separator regex
@@ -60,10 +61,10 @@ class StormAttributeParser(AttributeParser):
         # dp -- date parts
         dp = dsr.split(text)
         return date( int(dp[2]), int(dp[1]), int(dp[0]) )
-
+    
     def parseAny(self, text):
         return unicode(text.decode('utf-8'))
-
+    
 
 class CSVType(object):
     """docstring for CSVType"""
@@ -73,6 +74,7 @@ class CSVType(object):
         self.keys = {}
         self.attributes = {}
         self.statements = []
+        self.hasPrimaryKey = False
         primaryKey = None
         for i, field in zip(count(1), fields[1:]):
             # TODO: resolve field names
@@ -82,67 +84,62 @@ class CSVType(object):
                 self.attributes[i] = field
             if isPrimaryKey(self.type, field):
                 primaryKey = (i, field)
+                if i in self.keys:
+                    self.hasPrimaryKey = True
         if len(self.keys) is 0:
             if primaryKey is None:
                 raise Exception("No key given")
             else:
                 self.keys[primaryKey[0]] = primaryKey[1]
+                self.hasPrimaryKey = True
                 if primaryKey[0] in self.attributes:
                     del self.attributes[primaryKey[0]]
-
+    
     def addStatement(self, statement):
         self.statements.append(statement)
-
+    
 
 class CSVStatement(object):
     """CSVStatement represents the csv statement to be executed by a ORM."""
-
     def __init__(self, csvRow, attrParser):
         self.csvRow = csvRow
         self.attributes = {}
         for i, field in zip(count(1), csvRow[1:]):
             self.attributes[i] = attrParser.parse(field)
-            
+    
 
 class InsertCSVStatement(CSVStatement):
     """docstring for InsertCSVStatement"""
-    def __init__(self, csvRow, attrParser=AttributeParser()):
+    def __init__(self, csvRow, attrParser):
         super(InsertCSVStatement, self).__init__(csvRow, attrParser)
-        self.arg = arg
-        
+    
 
 class DeleteCSVStatement(CSVStatement):
     """docstring for InsertCSVStatement"""
-    def __init__(self, csvRow, attrParser=AttributeParser()):
+    def __init__(self, csvRow, attrParser):
         super(DeleteCSVStatement, self).__init__(csvRow, attrParser)
-        self.arg = arg
-        
 
 class UpdateCSVStatement(CSVStatement):
     """docstring for InsertCSVStatement"""
-    def __init__(self, csvRow, attrParser=AttributeParser()):
+    def __init__(self, csvRow, attrParser):
         super(UpdateCSVStatement, self).__init__(csvRow, attrParser)
-        self.arg = arg
-        
 
 class CSVStatementFactory(object):
     """docstring for CSVStatementFactory"""
-    def newStatement(self, csvRow, attrParser=AttributeParser()):
+    def newStatement(self, csvRow, attrParser):
         """docstring for newStatement"""
         if csvRow[0] == '+':
-            return InsertCSVStatement(csvRow)
+            return InsertCSVStatement(csvRow, attrParser)
         elif csvRow[0] == '-':
-            return DeleteCSVStatement(csvRow)
+            return DeleteCSVStatement(csvRow, attrParser)
         elif csvRow[0] == '~':
-            return UpdateCSVStatement(csvRow)
-
+            return UpdateCSVStatement(csvRow, attrParser)
 
 class CSV(object):
     """CSV class that handles the csv files
-
+        
     content is any iterable where the content of each row is data delimited text.
     """
-
     def __init__(self, content, attrParser=AttributeParser()):
         self.types = []
         for csvRow in csv.reader(content):
@@ -152,17 +149,17 @@ class CSV(object):
             elif csvRow[0][0].isalpha():
                 csvType = CSVType(csvRow)
                 self.types.append(csvType)
-            elif csvRow[0] in '-+~':
+            elif csvRow[0] in '+-~':
                 statement = CSVStatementFactory.newStatement(csvRow, attrParser)
                 csvType.addStatement(statement)
-                
 
 class ORM(object):
-    """docstring for ORM"""
-    def __init__(self, arg):
-        super(ORM, self).__init__()
-        self.arg = arg
-        
+    """Abstracts the ORM engine"""
+    def execute(self, csv):
+        """Executes statements bound for all types attached to csv"""
+        for typo in csv.types:
+            for statement in typo.statements:
+                self.executeStatement(typo, statement)
 
 class StormORM(ORM):
     """docstring for StormORM"""
@@ -175,11 +172,56 @@ class StormORM(ORM):
             self.store = Store(database)
         if not self.store:
             raise Exception('None storm store')
-        
-    def execute(self, csvType, csvStatement):
-        """docstring for execute"""
-        pass
-
+            
+    def getObject(self, csvType, csvStatement):
+        """Retrieves the object to be used at statement execution"""
+        typo = csvType.type
+        keys = csvType.keys
+        attributes = csvStatement.attributes
+        if type(csvStatement) in [DeleteCSVStatement, UpdateCSVStatement]:
+            if csvType.hasPrimaryKey:
+                return self.store.get(csvType.type, attributes[csvType.primaryKey[0]])
+            else:
+                pred = And([Eq(typo, key, attributes[i]) for i,key in keys])
+                result = self.store.find(typo, pred)
+                if result.count() == 0:
+                    return None
+                elif result.count() == 1:
+                    return result.one()
+                else:
+                    return [r for r in result]
+        elif type(csvStatement) is InsertCSVStatement:
+            return typo()
+    
+    def executeStatement(self, csvType, csvStatement):
+        """Executes csv statement"""
+        obj = getObject(csvType, csvStatement)
+        objs = []
+        if type(obj) is list:
+            objs += obj
+        else:
+            objs.append(obj)
+        for _obj in objs:
+            self._executeStatement(_obj, csvType, csvStatement)
+    
+    def _executeStatement(self, obj, csvType, csvStatement):
+        """Executes csv statement"""
+        keys = csvType.keys
+        attributes = csvType.attributes
+        values = csvStatement.attributes
+        if type(csvStatement) is InsertCSVStatement:
+            pairs = [(key, values[i]) for i,key in keys]
+            pairs += [(key, values[i]) for i,key in attributes]
+            for key, value in pairs:
+                setattr(obj, key, value)
+            self.store.add(obj)
+        elif type(csvStatement) is UpdateCSVStatement:
+            pairs = [(key, values[i]) for i,key in attributes]
+            for key, value in pairs:
+                setattr(obj, key, value)
+        elif type(csvStatement) is DeleteCSVStatement:
+            self.store.remove(obj)
+        self.commit()
 
 class SQLObjectORM(ORM):
     """docstring for SQLObjectORM"""
@@ -192,19 +234,6 @@ class SQLAlchemyORM(ORM):
     def __init__(self, arg):
         super(SQLAlchemyORM, self).__init__()
         self.arg = arg
-        
-
-def addAction(handler, csvRow, store):
-    attrs = []
-    attrs += handler.keys
-    attrs += handler.attributes
-    attrs = [(attrName, csvRow[i]) for i, attrName in attrs]
-
-class Key(object):
-    """docstring for KeyWrapper"""
-    def __init__(self, keyName, isPrimaryKey):
-        self.keyName = keyName
-        self.isPrimaryKey = isPrimaryKey
 
 def importClass(className):
     fields = className.split('.')
@@ -214,7 +243,6 @@ def importClass(className):
     return getattr(module, clsName)
 
 def isPrimaryKey(cls, attrName):
-    """docstring for isPrimaryKey"""
     if hasattr(getattr(cls, attrName), 'primary'):
         return True
     else:
@@ -226,7 +254,7 @@ def Eq(cls, name, value):
 
 def And(preds):
     return reduce(and_, preds)
-        
+
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
