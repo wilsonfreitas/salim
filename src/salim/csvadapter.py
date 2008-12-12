@@ -9,13 +9,23 @@ Copyright (c) 2008 __MyCompanyName__. All rights reserved.
 
 import csv
 import re
-import datetime
+from datetime import date
 from operator import attrgetter, and_, eq
+from types import MethodType
+from itertools import count
 
 class AttributeParser(object):
     """docstring for AttributeParser"""
     def __init__(self):
-        self.regexes = [(re.compile(v.__doc__), v) for k, v in self.__dict__ if v.__doc__]
+        self.regexes = self.__createMethodAnalyzers()
+        
+    def __createMethodAnalyzers(self):
+        pairs = []
+        for methodName in dir(self):
+            method = getattr(self, methodName)
+            if methodName.startswith('parse') and type(method) is MethodType and method.__doc__:
+                pairs.append( (re.compile(method.__doc__), method) )
+        return pairs
     
     def parse(self, text):
         result = None
@@ -23,8 +33,9 @@ class AttributeParser(object):
             match = regex.match(text)
             if match:
                 result = func(text, match)
-        if not result:
-            result = parseAny(text)
+                break
+        if result is None:
+            result = self.parseAny(text)
         return result
     
     def parseNumber(self, text, match):
@@ -45,7 +56,7 @@ class AttributeParser(object):
 
 class StormAttributeParser(AttributeParser):
     """docstring for StormAttributeParser"""
-    def __init__(self, arg):
+    def __init__(self):
         super(StormAttributeParser, self).__init__()
     
     def parseText(self, text, match):
@@ -66,9 +77,46 @@ class StormAttributeParser(AttributeParser):
         return unicode(text.decode('utf-8'))
     
 
+def simple(attrName):
+    '''
+    Convert human readable header names to property names in lower case and 
+    replacing spaces to underscore.
+    Examples:
+
+    >>> resolvePropertyName("Category")
+    "category"
+    >>> resolveName("Bank Account")
+    "bank_account"
+    '''
+    attrName = str(attrName).strip()
+    attrName = attrName.lower()
+    attrName = re.sub('\s+', '_', attrName)
+    return attrName
+
+
+def camelCase(attrName):
+    '''
+    Convert human readable header names to camel case property names.
+    Examples:
+
+    >>> resolveCamelCasePropertyName("Category")
+    "category"
+    >>> resolveCamelCasePropertyName("Bank Account")
+    "bankAccount"
+    '''
+    attrParts = attrName.lower().split()
+    s = []
+    for i,part in enumerate(attrParts):
+        if i == 0:
+            s.append(part)
+        else:
+            s.append(part.capitalize())
+    return ''.join(s)
+
+
 class CSVType(object):
     """docstring for CSVType"""
-    def __init__(self, fields):
+    def __init__(self, fields, nameResolution=simple):
         self.typeName = fields[0]
         self.type = importClass(self.typeName)
         self.keys = {}
@@ -76,8 +124,9 @@ class CSVType(object):
         self.statements = []
         self.hasPrimaryKey = False
         primaryKey = None
+                
         for i, field in zip(count(1), fields[1:]):
-            # TODO: resolve field names
+            field = nameResolution(field)
             if re.match(r'^\{\w+\}$', field):
                 self.keys[i] = field
             else:
@@ -118,22 +167,33 @@ class DeleteCSVStatement(CSVStatement):
     """docstring for InsertCSVStatement"""
     def __init__(self, csvRow, attrParser):
         super(DeleteCSVStatement, self).__init__(csvRow, attrParser)
+    
 
 class UpdateCSVStatement(CSVStatement):
     """docstring for InsertCSVStatement"""
     def __init__(self, csvRow, attrParser):
         super(UpdateCSVStatement, self).__init__(csvRow, attrParser)
+    
 
 class CSVStatementFactory(object):
     """docstring for CSVStatementFactory"""
+    statements = {
+    '+': InsertCSVStatement,
+    '-': DeleteCSVStatement,
+    '~': UpdateCSVStatement
+    }
+    
+    @classmethod
     def newStatement(self, csvRow, attrParser):
         """docstring for newStatement"""
-        if csvRow[0] == '+':
-            return InsertCSVStatement(csvRow, attrParser)
-        elif csvRow[0] == '-':
-            return DeleteCSVStatement(csvRow, attrParser)
-        elif csvRow[0] == '~':
-            return UpdateCSVStatement(csvRow, attrParser)
+        return statements[ csvRow[0] ](csvRow, attrParser)
+        # if csvRow[0] == '+':
+        #     return InsertCSVStatement(csvRow, attrParser)
+        # elif csvRow[0] == '-':
+        #     return DeleteCSVStatement(csvRow, attrParser)
+        # elif csvRow[0] == '~':
+        #     return UpdateCSVStatement(csvRow, attrParser)
+    
 
 class CSV(object):
     """CSV class that handles the csv files
@@ -152,6 +212,8 @@ class CSV(object):
             elif csvRow[0] in '+-~':
                 statement = CSVStatementFactory.newStatement(csvRow, attrParser)
                 csvType.addStatement(statement)
+    
+
 
 class ORM(object):
     """Abstracts the ORM engine"""
@@ -160,6 +222,8 @@ class ORM(object):
         for typo in csv.types:
             for statement in typo.statements:
                 self.executeStatement(typo, statement)
+    
+
 
 class StormORM(ORM):
     """docstring for StormORM"""
@@ -222,18 +286,22 @@ class StormORM(ORM):
         elif type(csvStatement) is DeleteCSVStatement:
             self.store.remove(obj)
         self.commit()
+    
+
 
 class SQLObjectORM(ORM):
     """docstring for SQLObjectORM"""
     def __init__(self, arg):
         super(SQLObjectORM, self).__init__()
         self.arg = arg
+    
 
 class SQLAlchemyORM(ORM):
     """docstring for SQLAlchemyORM"""
     def __init__(self, arg):
         super(SQLAlchemyORM, self).__init__()
         self.arg = arg
+    
 
 def importClass(className):
     fields = className.split('.')
@@ -242,18 +310,22 @@ def importClass(className):
     module = __import__(modName, globals(), locals(), [clsName], -1)
     return getattr(module, clsName)
 
+
 def isPrimaryKey(cls, attrName):
     if hasattr(getattr(cls, attrName), 'primary'):
         return True
     else:
         return False
 
+
 def Eq(cls, name, value):
     f = attrgetter(name)
     return eq(f(cls), value)
 
+
 def And(preds):
     return reduce(and_, preds)
+
 
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
@@ -269,6 +341,7 @@ def to_unicode(s):
     s = s.decode('utf-8')
     return unicode(s)
 
+
 def parse_date(date_str):
     import re
     from datetime import date
@@ -278,10 +351,12 @@ def parse_date(date_str):
     dp = dsr.split(date_str)
     return date( int(dp[2]), int(dp[1]), int(dp[0]) )
 
+
 def parse_str(s):
     s = s[1:]
     s.decode('utf-8')
     return unicode(s)
+
 
 parse_table = {
     r'^-?\s*\d+$': int,

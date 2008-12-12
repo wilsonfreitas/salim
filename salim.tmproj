@@ -45,9 +45,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>4</integer>
+				<integer>16</integer>
 				<key>line</key>
-				<integer>4</integer>
+				<integer>14</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -59,20 +59,66 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>54</integer>
+				<integer>34</integer>
 				<key>line</key>
-				<integer>17</integer>
+				<integer>69</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
+			<integer>50</integer>
+		</dict>
+		<key>tests/csvadapterTest.py</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>19</integer>
+				<key>line</key>
+				<integer>10</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
 			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>5</integer>
+		</dict>
+		<key>tests/salimTest.py</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>718</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>679</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>705</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>718</integer>
+			</dict>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
 		<string>TODO</string>
 		<string>src/salim/csvadapter.py</string>
+		<string>tests/csvadapterTest.py</string>
+		<string>tests/salimTest.py</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

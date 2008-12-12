@@ -153,6 +153,7 @@ def list_balance(options):
 def report(options):
     year, month = options.date
     date = datetime.date(year, month, 1)
+    date_end = date + datetime.timedelta(days=30)
 
     transactions = [ t for t in facade.find_transactions_after_date(date, options.account) ]
     last = transactions[len(transactions)-1][0]
@@ -161,7 +162,7 @@ def report(options):
     print '%-30.30s%-30.30s' % ('Bank account:', last.balance.bank_account.name)
     print '-' * 60
     print '%-30.30s%10.2f'   % ('Balance:', balance)
-    budget_entries_not_payed = [e for e in facade.find_budget_entries_after_date(date) if not e.payed]
+    budget_entries_not_payed = [e for e in facade.find_budget_entries_after_date(date, date_end) if not e.payed]
     expense = reduce(lambda x,y: x + y.amount, budget_entries_not_payed, 0.0)
     print '%-30.30s%10.2f' % ('Expected expenses:', expense)
     print '-' * 40

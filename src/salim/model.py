@@ -149,8 +149,8 @@ class BudgetEntry(GenericBase):
         self._parse_args_and_kwargs(*args, **kwargs)
 
     @classmethod
-    def find_after_date(cls, date):
-        return store.find( cls, cls.date >= date ).order_by( cls.date )
+    def find_after_date(cls, date, date_end):
+        return store.find( cls, cls.date >= date, cls.date <= date_end ).order_by( cls.date )
     
 
 class BankAccount(GenericBase):

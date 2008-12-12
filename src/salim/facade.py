@@ -99,5 +99,5 @@ def find_balance_amount_for_date(date, account):
                 return balance_amount
             balance_amount += stmt.amount
 
-def find_budget_entries_after_date(date):
-    return BudgetEntry.find_after_date(date)
+def find_budget_entries_after_date(date, date_end):
+    return BudgetEntry.find_after_date(date, date_end)

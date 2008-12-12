@@ -2,7 +2,7 @@
 # -*- encoding: latin1 -*-
 
 import sys
-sys.path.append('./src')
+sys.path.append('./salim/src')
 
 from unittest import TestCase, TestSuite, makeSuite, TextTestRunner
 from salim.ofx import OFXFileParser, OFXTextParser
