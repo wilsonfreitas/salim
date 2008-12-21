@@ -2,12 +2,12 @@
 # -*- encoding: latin1 -*-
 
 import sys
-sys.path.append('./salim/src')
+sys.path.append('./src')
 
 from unittest import TestCase, TestSuite, makeSuite, TextTestRunner
 from salim.ofx import OFXFileParser, OFXTextParser
 from salim.model import *
-from salim.csvadapter import *
+# from salim.csvadapter import *
 from datetime import date
 
 
@@ -542,6 +542,7 @@ class TestEntireOFXInsertion(TestDB):
         self.assertEqual(self.store.find(LedgerBalance).count(), 1)
     
 
+
 class TestBudgetEntry(TestDB):
     """Test BudgetEntry in salim database"""
     def test_budget_entry_insertion(self):
@@ -557,151 +558,16 @@ class TestBudgetEntry(TestDB):
     
     def test_budget_entry_insertion_with_category(self):
         """testing BudgetEntry insertion with category"""
-        cat = self.store.get(Category, u'Despesas Operacionais')
+        cat = self.store.get(Category, u'Empregada')
         entry = BudgetEntry(u'Credicard',str2date('20080701'), 2.00, cat)
         self.assertEqual(entry.id, None) # at this time id must be None!
         self.assertEqual(entry.name, u'Credicard')
         self.assertEqual(entry.date, str2date('20080701'))
         self.assertEqual(entry.amount, 2.00)
-        self.assertEqual(entry.category.name, u'Despesas Operacionais')
+        self.assertEqual(entry.category.name, u'Empregada')
         self.store.commit()
         self.assertNotEqual(entry.id, None)    # at this time id must not be None!
     
-
-class TestCSVAdapter(TestDB):
-    def test_parse_value(self):
-        """testing parse_value function with using default parse_table parameter"""
-        v = parse_value('12913120')
-        self.assert_(type(v) is int)
-        self.assertEqual(v, 12913120)
-        
-        v = parse_value('12913120102382103981209381029831902831')
-        self.assert_(type(v) is long)
-        self.assertEqual(v, 12913120102382103981209381029831902831)
-        
-        v = parse_value('-1902831')
-        self.assert_(type(v) is int)
-        self.assertEqual(v, -1902831)
-
-        v = parse_value('-  1902831')
-        self.assert_(type(v) is int)
-        self.assertEqual(v, -1902831)
-
-        v = parse_value('12913120.9123812')
-        self.assert_(type(v) is float)
-        self.assertEqual(v, 12913120.9123812)
-        
-        v = parse_value('-91238.12212')
-        self.assert_(type(v) is float)
-        self.assertEqual(v, -91238.12212)
-        
-        v = parse_value(u'TRUE')
-        self.assert_(type(v) is bool)
-        self.assertEqual(v, True)
-
-        v = parse_value(u'True')
-        self.assert_(type(v) is bool)
-        self.assertEqual(v, True)
-        
-        v = parse_value(u'false')
-        self.assert_(type(v) is bool)
-        self.assertEqual(v, False)
-        
-        v = parse_value('28/02/2008')
-        self.assert_(type(v) is date)
-        self.assertEqual(v, date(2008,2,28))
-        
-        v = parse_value('01_02_2008')
-        self.assert_(type(v) is date)
-        self.assertEqual(v, date(2008,2,1))
-        
-        self.assertRaises(ValueError, parse_value, '31/02/2008')
-        
-        v = parse_value('12913120L')
-        self.assert_(type(v) is unicode)
-        self.assertEqual(v, u'12913120L')
-
-        v = parse_value(u'Wilson Nascimento de Freitas')
-        self.assert_(type(v) is unicode)
-        self.assertEqual(v, u'Wilson Nascimento de Freitas')
-    
-    def test_parse_value_with_table(self):
-        """testing parse_value function with a given parse_table parameter"""
-        parse_table = {
-            r'^\d\d[/\.-_:]\d\d[/\.-_:]\d\d\d\d$': lambda v: str2date( '%s%s%s' % (v[6:], v[:2],  v[3:5]) ),
-            'any': str
-        }
-        v = parse_value('01_31_2008', parse_table)
-        self.assert_(type(v) is date)
-        self.assertEqual(v, date(2008,1,31))
-
-        v = parse_value(u'Wilson Nascimento de Freitas', parse_table)
-        self.assert_(type(v) is str)
-        self.assertEqual(v, 'Wilson Nascimento de Freitas')
-    
-    def test_resolve_name(self):
-        """testing naming resolution functions"""
-        names = resolve_property_names(['Category','Full Name', 'Complete Address 1'])
-        self.assertEqual('category', names[0])
-        self.assertEqual('full_name', names[1])
-        self.assertEqual('complete_address_1', names[2])
-        names = resolve_property_names(['Category','Full Name', 'Complete Address 1'], True)
-        self.assertEqual('category', names[0])
-        self.assertEqual('fullName', names[1])
-        self.assertEqual('completeAddress1', names[2])
-    
-    def test_object_creation(self):
-        '''testing object creation'''
-        class A(object): pass
-        a = create_new_instance(A, ['parameter1', 'parameter2'], ['value1', 2])
-        self.assertEqual(type(a), A)
-        self.assertEqual(a.parameter1, 'value1')
-        self.assertEqual(a.parameter2, 2)
-
-    def test_object_creation_with_model_classes(self):
-        '''testing object creation with salim.model classes'''
-        cat = create_new_instance(Category, ['name', 'parent'], [u'Casa', u'Despesas Operacionais'])
-        self.store.add(cat)
-        entry = create_new_instance(BudgetEntry, ['name', 'date', 'amount', 'category'], 
-                                                 [u'Telemar', date(2008,05,21), -139.00, u'Casa'], False)
-        self.store.add(entry)
-        self.assertEqual(entry.category.parent.name, u'Despesas Operacionais')
-
-    def test_csv_parsing(self):
-        """testing csv parsing"""
-        csv = '''
-        
-Person,name,birth date
-,Wilson,12-07-1976
-,Lissandra,02-02-1977
-
-# comments
-'''
-        csv_file = csv.splitlines()
-        class Person(object): pass
-        objs = parse_csv_file(csv_file, locals())
-        self.assertEqual(2, len(objs))
-        self.assertEqual(objs[0].name, u'Wilson')
-
-    def test_csv_parsing_with_salim_model_classes(self):
-        """testing csv parsing with salim.model classes: repeated rows"""
-        csv = '''
-
-Category,name,parent
-,Filhos,Despesas Operacionais
-
-# comments
-'''
-        csv_file = csv.splitlines()
-        objs = parse_model_csv_file(csv_file, globals())
-        try:
-            self.store.add(objs[0])
-            self.store.commit()
-            cat = objs[0]
-        except:
-            cat = update_model_instance(self.store, objs[0])
-        self.assertEqual(cat.parent.name, u'Despesas Operacionais')
-
 
 if __name__ == '__main__':
     suite = TestSuite()
@@ -713,6 +579,5 @@ if __name__ == '__main__':
     suite.addTest(makeSuite(TestStatement))
     suite.addTest(makeSuite(TestEntireOFXInsertion))
     suite.addTest(makeSuite(TestBudgetEntry))
-    suite.addTest(makeSuite(TestCSVAdapter))
     runner = TextTestRunner(verbosity=2)
     runner.run(suite)
