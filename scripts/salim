@@ -1,21 +1,24 @@
 #!/usr/bin/env python
 # 
-#  salim
+#  salim - the standard implementation for the salim personal financial manager API
 #  
 
 import sys
-sys.path.append('../src')
 import os
 import logging
 import getopt
 import datetime
 import time
 
+sys.path.append('../src')
+
+from easycsv import StormORM
+
 from salim.ofx import OFXFileParser
 from salim.model import *
 from salim import facade
 from salim import model
-from salim.csvadapter import parse_model_csv_file
+
 
 APP_NAME = 'salim'
 SALIM_HOME = os.path.join(os.environ['HOME'], '.salim')
@@ -76,19 +79,20 @@ Example: %(prog)s -v DEBUG --import-ofx 20080801.ofx 20080701.ofx
 
 Options:
   -v, --verbosity-level     select the verbosity level of output messages: ERROR, WARN, INFO (default), DEBUG
-      --export-memos        scan the transactions store into database and generate a file with transaction memos
+      --export-memos        scan the transactions stored into database and generate a file with transaction memos
                             that aren't bound to a category
       --import-csv          read a csv file and import its content into database as objects via ORM
       --import-ofx          import an ofx file into database
       --server              starts the salim http server
       --report              print a report for a given account (--account) and from a date (--date)
-      --list-balance        lists the balances for a given account (--account) and from a date (--date)
+      --list-balance        list the balances for a given account (--account) and from a date (--date)
       --date=DATE           sets DATE to list balance
       --account=ACC         sets ACC as account when lists balance
       --help                display this help and exit
 ''' % { 'prog': APP_NAME } )
         sys.exit(0)
         
+
 def check_user_environment():
     if not os.path.isdir(SALIM_HOME):
         os.mkdir(SALIM_HOME)
@@ -99,15 +103,15 @@ def check_user_environment():
     else:
         create_database(salim_db_uri)
 
+
 def import_ofx_files(options):
-    # reading ofx files
     logging.info('Given %d files: %s' % (len(options.filenames), ', '.join(options.filenames)) )
     for filename in options.filenames:
         logging.debug('Processing: %s' % filename)
         facade.import_ofx(filename)
 
+
 def export_memos(options):
-    # logging.info('Given %d files: %s' % (len(options.filenames), ', '.join(options.filenames)) )
     memos = [stmt.memo for stmt in model.store.find(StatementTransaction, StatementTransaction.category == None)]
     logging.debug('Total memos: %d' % len(memos))
     memos = list(set(memos))
@@ -120,25 +124,25 @@ def export_memos(options):
     file_memos.close()
     logging.info('Total %d memos saved in %s' % (len(memos), output_filename))
 
+
 def import_csv(options):
     logging.info('Given %d files: %s' % (len(options.filenames), ', '.join(options.filenames)) )
-    u = i = 0
+    storm = StormORM(store=model.store)
+    i, u, d, t = 0, 0, 0, 0
     for filename in options.filenames:
         logging.info('Processing: %s' % filename)
         file_csv = file(filename)
-        objs = parse_model_csv_file(file_csv, globals())
-        for obj in objs:
-            try:
-                model.store.add(obj)
-                model.store.commit()
-                i += 1
-            except:
-                update_model_instance(model.store, obj)
-                u += 1
+        results = storm.execute(file_csv, module=model)
+        i += results[0]
+        u += results[1]
+        d += results[2]
+        t += results[3]
         file_csv.close()
-    logging.info('Total objects inserted: %d' % i)
-    logging.info('Total objects updated: %d' % u)
-    model.store.commit()
+    logging.info('Total insert statements: %d' % i)
+    logging.info('Total update statements: %d' % u)
+    logging.info('Total delete statements: %d' % d)
+    logging.info('Total statements: %d' % t)
+
 
 def list_balance(options):
     year, month = options.date
@@ -162,11 +166,11 @@ def report(options):
     print '%-30.30s%-30.30s' % ('Bank account:', last.balance.bank_account.name)
     print '-' * 60
     print '%-30.30s%10.2f'   % ('Balance:', balance)
-    budget_entries_not_payed = [e for e in facade.find_budget_entries_after_date(date, date_end) if not e.payed]
+    budget_entries_not_payed = [e for e in facade.find_budget_entries_after_date(date, date_end) if not e.payed and e.amount < 0]
     expense = reduce(lambda x,y: x + y.amount, budget_entries_not_payed, 0.0)
     print '%-30.30s%10.2f' % ('Expected expenses:', expense)
     print '-' * 40
-    print '%-30.30s%10.2f' % ('Net:', balance - expense)
+    print '%-30.30s%10.2f' % ('Net:', balance + expense)
     print '-' * 80
     name = lambda cat: (cat and cat.name.encode('utf-8')) or '-'
     for entry in budget_entries_not_payed:

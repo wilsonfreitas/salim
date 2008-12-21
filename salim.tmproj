@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>src/salim/csvadapter.py</string>
+	<string>scripts/salim</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -16,25 +16,6 @@
 			<key>sourceDirectory</key>
 			<string></string>
 		</dict>
-		<dict>
-			<key>children</key>
-			<array>
-				<dict>
-					<key>expanded</key>
-					<true/>
-					<key>name</key>
-					<string>wel</string>
-					<key>regexFolderFilter</key>
-					<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
-					<key>sourceDirectory</key>
-					<string>../workspace/wel</string>
-				</dict>
-			</array>
-			<key>expanded</key>
-			<true/>
-			<key>name</key>
-			<string>contrib</string>
-		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
 	<integer>236</integer>
@@ -45,80 +26,64 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
+				<integer>12</integer>
+				<key>line</key>
+				<integer>3</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>scripts/salim</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
 				<integer>16</integer>
 				<key>line</key>
-				<integer>14</integer>
+				<integer>112</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>89</integer>
 		</dict>
-		<key>src/salim/csvadapter.py</key>
+		<key>src/salim/facade.py</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>34</integer>
+				<integer>33</integer>
 				<key>line</key>
-				<integer>69</integer>
+				<integer>56</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>50</integer>
+			<integer>7</integer>
 		</dict>
-		<key>tests/csvadapterTest.py</key>
+		<key>src/salim/model.py</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>19</integer>
+				<integer>26</integer>
 				<key>line</key>
-				<integer>10</integer>
+				<integer>214</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>5</integer>
-		</dict>
-		<key>tests/salimTest.py</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>718</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>679</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>705</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>718</integer>
-			</dict>
+			<integer>20</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
 		<string>TODO</string>
-		<string>src/salim/csvadapter.py</string>
-		<string>tests/csvadapterTest.py</string>
-		<string>tests/salimTest.py</string>
+		<string>scripts/salim</string>
+		<string>src/salim/model.py</string>
+		<string>src/salim/facade.py</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

@@ -7,7 +7,7 @@ CREATE TABLE category (
 
 INSERT INTO "category" VALUES('Filhos', NULL);
 INSERT INTO "category" VALUES('Automóvel', NULL);
-INSERT INTO "category" VALUES('Despesas Operacionais', NULL);
+-- INSERT INTO "category" VALUES('Despesas Operacionais', NULL);
 INSERT INTO "category" VALUES('Empregada', NULL);
 INSERT INTO "category" VALUES('Despesas São Paulo', NULL);
 INSERT INTO "category" VALUES('Receitas', NULL);
@@ -24,7 +24,7 @@ CREATE TABLE budget_entry (
                    category_name TEXT,
                    name TEXT,
                    date TEXT,
-                   amount REAL );
+                   amount REAL, scenario TEXT, payed INTEGER );
 
 CREATE TABLE bank_account (
 account text primary key,
