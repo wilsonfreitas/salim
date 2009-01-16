@@ -2,7 +2,6 @@
 * study more about __slots__ and its consequences
 
 * csvadapter
-	* implement a csv writer/exporter
 	* (done)parse_table could be implemented as an object to permit salim parser extension via object inheritance 
 	* (done)fields evaluation: use python eval function
 		* =?'TEXT -> text evaluation
@@ -17,9 +16,8 @@
 		* (done) parse csv test
 
 * salim
+	* implement a csv writer/exporter
 	* merge model and facade modules
-	* BudgetEntry must have a field (column) for payed/not payed
-	* BudgetEntry: negative amounts are expenses and the positive ones are income
 	* create reports
 	* export budget to iCal (on current month)
 	* GUI: web using javascript (jquery) and BaseHttpServer, it's quite simple to handle requests with doPost and doGet. The idea is to use one single xhtml page and handle requests via AJAX calls.
@@ -33,7 +31,9 @@
 		* setup bank_account name
 		* setup transaction category
 		* create CategoryRules
-	* where do I put files like database.sql (setup files -- /usr/share/salim -- make salim install)?
+	* (done) BudgetEntry must have a field (column) for payed/not payed
+	* (done) BudgetEntry: negative amounts are expenses and the positive ones are income
+	* (done) where do I put files like database.sql (setup files -- /usr/share/salim -- make salim install)? inside code
 	* (done) copy salim.sql contents to salim.model as a model variable or a function to create salim database
 	* (done) export memos from statement transactions without category
 	* (done) import csv files and attach them into objects: create import_csv ot import everything (rules, budget ...)
