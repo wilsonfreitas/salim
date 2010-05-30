@@ -1,11 +1,12 @@
 ﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{89A1E0D2-34FA-4C18-936F-6AD8079C7155}</ProjectGuid>
+    <ProjectGuid>{293E20FD-5FFB-4A42-87F3-0BDC32D63887}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>salim</RootNamespace>
-    <AssemblyName>salim</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>testofx</RootNamespace>
+    <AssemblyName>testofx</AssemblyName>
+    <MainFile>ofx2csv.py</MainFile>
     <DebugInfo>True</DebugInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
@@ -36,7 +37,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ofx.py" />
-    <Compile Include="__init__.py" />
+    <Compile Include="ofx2csv.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\salim\salim.pyproj">
+      <Project>{89A1E0D2-34FA-4C18-936F-6AD8079C7155}</Project>
+      <Name>salim</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

@@ -5,7 +5,6 @@ from HTMLParser import HTMLParser
 
 __all__ = [ 'OFXFileParser', 'OFXTextParser' ]
 
-
 class OFXParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
