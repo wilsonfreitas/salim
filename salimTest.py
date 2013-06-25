@@ -113,8 +113,9 @@ class TestOFXFileParser(TestCase):
         stmt = self.parser['StmtTrn']
         def print_():
             print 'test', stmt[0]['memo']
-        self.assertRaises(UnicodeEncodeError, print_)
-        print 'test', stmt[0]['memo'].encode('utf-8')
+        print_()
+        # self.assertRaises(UnicodeEncodeError, print_)
+        # print 'test', stmt[0]['memo'].encode('utf-8')
     
 
 class TestDB(TestCase):
@@ -123,7 +124,7 @@ class TestDB(TestCase):
     def setUp(self):
         """docstring for setUp"""
         self.store = create_database('sqlite:')
-        read_file(self.store, './src/salim.sql')
+        read_file(self.store, './salim/salim.sql')
         self.parser = OFXFileParser( "./tests/Test4.ofx")
         self.parser1 = OFXFileParser("./tests/Test1.ofx")
         self.parser2 = OFXFileParser("./tests/Test2.ofx")
