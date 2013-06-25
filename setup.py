@@ -7,7 +7,7 @@ from distutils.core import setup
 
 setup(name="salim",
       version="0.1.0",
-      package_dir={'salim': 'src/salim'},
+      package_dir={'salim': 'salim'},
       packages=['salim'],
       author='Wilson Freitas',
       author_email='wilson.freitas@gmail.com',
