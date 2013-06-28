@@ -40,8 +40,11 @@ class OFXImport(object):
         # -- saving balance
         if not bool(LedgerBalance.by_bank_account_and_date(self.bank_account, str2date(ofx['ledgerbal']['dtasof']))):
             model.store.commit()
-            d = { 'date': str2date(ofx['ledgerbal']['dtasof']), 'amount': float(ofx['ledgerbal']['balamt']),
-                  'bank_account': self.bank_account }
+            d = {
+                'date': str2date(ofx['ledgerbal']['dtasof']),
+                'amount': float(ofx['ledgerbal']['balamt']),
+                'bank_account': self.bank_account
+            }
             self.balance = LedgerBalance(**d)
             # -- saving statement transactions
             for _transaction in ofx['StmtTrn']:
